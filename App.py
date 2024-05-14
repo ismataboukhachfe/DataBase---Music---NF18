@@ -86,3 +86,192 @@ def modifier(self,conn,identifiant, nom_utilisateur, motdepasse, adressemail, da
             print(f"Date d'inscription: {user[4]}")
         else:
             print(f"Utilisateur avec le nom '{nom}' non trouvé.")
+#----------------------------------------------------------------------------------------------------#
+class ContientChanson:
+    @classmethod
+    def inserer(idPlaylist, idChanson):
+        cursor = conn.cursor()
+        insertion = "INSERT INTO ContientChanson VALUES ('%s', '%s')" % (idPlaylist, idChanson)
+        cursor.execute(insertion)
+        connection.commit()
+        connection.close()
+
+    @classmethod
+    def modifier(colonne, valeur, condition):
+        cursor = conn.cursor()
+        modification = "UPDATE ContientChanson SET %s = %s WHERE %s" % (colonne, valeur, condition)
+        cursor.execute(modification)
+        connection.commit()
+        connection.close()
+
+    @classmethod
+    def supprimer(condition):
+        cursor = conn.cursor()
+        suppression = "DELETE FROM ContientChanson WHERE %s" % (condition)
+        cursor.execute(suppression)
+        connection.commit()
+        connection.close()
+
+    @classmethod
+    def afficherTous():
+        cursor = conn.cursor()
+        affichage = "SELECT * FROM ContientChanson"
+        cursor.execute(affichage)
+        rawdata = cursor.fetchone()
+        while rawdata:
+            print(rawdata[0], rawdata[1])
+            rawdata = cursor.fetchone()
+        connection.close()
+	    
+    @classmethod
+    def afficherParCondition(condition):
+        cursor = conn.cursor()
+        affichage = "SELECT * FROM ContientChanson WHERE %s" % (condition)
+        cursor.execute(affichage)
+        rawdata = cursor.fetchone()
+        while rawdata:
+            print(rawdata[0], rawdata[1])
+            rawdata = cursor.fetchone()
+        connection.close()
+#----------------------------------------------------------------------------------------------------#
+class Historique:
+    @classmethod
+    def inserer(chanson, utilisateur, compteur):
+        cursor = conn.cursor()
+        insertion = "INSERT INTO Historique VALUES ('%s', '%s', '%s')" % (chanson, utilisateur, compteur)
+        cursor.execute(insertion)
+        connection.commit()
+        connection.close()
+
+    @classmethod
+    def modifier(colonne, valeur, condition):
+        cursor = conn.cursor()
+        modification = "UPDATE Historique SET %s = %s WHERE %s" % (colonne, valeur, condition)
+        cursor.execute(modification)
+        connection.commit()
+        connection.close()
+
+    @classmethod
+    def supprimer(condition):
+        cursor = conn.cursor()
+        suppression = "DELETE FROM Historique WHERE %s" % (condition)
+        cursor.execute(suppression)
+        connection.commit()
+        connection.close()
+
+    @classmethod
+    def afficherTous():
+        cursor = conn.cursor()
+        affichage = "SELECT * FROM Historique"
+        cursor.execute(affichage)
+        rawdata = cursor.fetchone()
+        while rawdata:
+            print(rawdata[0], rawdata[1], rawdata[2])
+            rawdata = cursor.fetchone()
+        connection.close()
+
+    @classmethod
+    def afficherParCondition(condition):
+        cursor = conn.cursor()
+        affichage = "SELECT * FROM Historique WHERE %s" % (condition)
+        cursor.execute(affichage)
+        rawdata = cursor.fetchone()
+        while rawdata:
+            print(rawdata[0], rawdata[1], rawdata[2])
+            rawdata = cursor.fetchone()
+        connection.close()
+#----------------------------------------------------------------------------------------------------#
+class Amis:
+    @classmethod
+    def inserer(utilisateur1, utilisateur2):
+        cursor = conn.cursor()
+        insertion = "INSERT INTO Amis VALUES ('%s', '%s')" % (utilisateur1, utilisateur2)
+        cursor.execute(insertion)
+        connection.commit()
+        connection.close()
+
+    @classmethod
+    def modifier(colonne, valeur, condition):
+        cursor = conn.cursor()
+        modification = "UPDATE Amis SET %s = %s WHERE %s" % (colonne, valeur, condition)
+        cursor.execute(modification)
+        connection.commit()
+        connection.close()
+
+    @classmethod
+    def supprimer(condition):
+        cursor = conn.cursor()
+        suppression = "DELETE FROM Amis WHERE %s" % (condition)
+        cursor.execute(suppression)
+        connection.commit()
+        connection.close()
+
+    @classmethod
+    def afficherTous():
+        cursor = conn.cursor()
+        affichage = "SELECT * FROM Amis"
+        cursor.execute(affichage)
+        rawdata = cursor.fetchone()
+        while rawdata:
+            print(rawdata[0], rawdata[1])
+            rawdata = cursor.fetchone()
+        connection.close()
+
+    @classmethod
+    def afficherParCondition(condition):
+        cursor = conn.cursor()
+        affichage = "SELECT * FROM Amis WHERE %s" % (condition)
+        cursor.execute(affichage)
+        rawdata = cursor.fetchone()
+        while rawdata:
+            print(rawdata[0], rawdata[1])
+            rawdata = cursor.fetchone()
+        connection.close()
+
+class Editeur:
+    @classmethod
+    def inserer(nom):
+        cursor = conn.cursor()
+        insertion = "INSERT INTO Editeur VALUES ('%s')" % (nom)
+        cursor.execute(insertion)
+        connection.commit()
+        connection.close()
+
+    @classmethod
+    def modifier(colonne, valeur, condition):
+        cursor = conn.cursor()
+        modification = "UPDATE Editeur SET %s = %s WHERE %s" % (colonne, valeur, condition)
+        cursor.execute(modification)
+        connection.commit()
+        connection.close()
+
+    @classmethod
+    def supprimer(condition):
+        cursor = conn.cursor()
+        suppression = "DELETE FROM Editeur WHERE %s" % (condition)
+        cursor.execute(suppression)
+        connection.commit()
+        connection.close()
+
+    @classmethod
+    def afficherTous():
+        cursor = conn.cursor()
+        affichage = "SELECT * FROM Editeur"
+        cursor.execute(affichage)
+        rawdata = cursor.fetchone()
+        while rawdata:
+            print(rawdata[0])
+            rawdata = cursor.fetchone()
+        connection.close()
+
+    @classmethod
+    def afficherParCondition(condition):
+        cursor = conn.cursor()
+        affichage = "SELECT * FROM Editeur WHERE %s" % (condition)
+        cursor.execute(affichage)
+        rawdata = cursor.fetchone()
+        while rawdata:
+            print(rawdata[0])
+            rawdata = cursor.fetchone()
+        connection.close()
+#----------------------------------------------------------------------------------------------------#
