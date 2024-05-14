@@ -1,7 +1,21 @@
 #Fichier pour  creer l'application python de manipulation de donnees 
+import psycopg2
 
+HOST ="tuxa.sme.utc"
+USER = "nf18p032"
+PASSWORD = "Fb9EyCL7x6mZ"
+DATABASE = "dbnf18p032"
 
-class Utilisateur : 
+try :
+	conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
+	print("Connexion réussie \n")
+    #conn.close()
+	
+except Exception as error:
+	print("Une exception s'est produite : ", error)
+	print("Type d'exception : ", type(error))
+
+  class Utilisateur : 
     
     def __init__(self,identifiant,nom_utilisateur, motdepasse,adressemail,dateinscription ):
        
@@ -72,18 +86,3 @@ def modifier(self,conn,identifiant, nom_utilisateur, motdepasse, adressemail, da
             print(f"Date d'inscription: {user[4]}")
         else:
             print(f"Utilisateur avec le nom '{nom}' non trouvé.")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
