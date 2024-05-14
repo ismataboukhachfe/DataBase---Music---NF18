@@ -23,9 +23,9 @@ class Artiste:
     self.origine=origine
     self.biographie=biographie
 
-  def test_groupe(conn, ID)-> bool:
+  def test_groupe(conn, nom_g)-> bool:
     cur=conn.cursor()
-    sql= "SELECT Id_G from Groupe WHERE Id_G=%s" % (ID)
+    sql= "SELECT G.Id_G FROM Groupe as G JOIN Artiste as A ON G.Id_G=A.Id WHERE A.nom=%s" % (nom_g)
     cur.execute(sql)
 
     raw = cur.fetchone()
@@ -48,22 +48,34 @@ class Artiste:
 
 
   def insert(self,conn):
-    id=str(input("Entrez le numéro d'ID"))
+    id=str(input("Entrez le numéro d'ID \n"))
     while testID:
-         id=str(input("ID déjà pris, tapez un ID différent"))
+         id=str(input("ID déjà pris, tapez un ID différent \n"))
          testID=self.test_id(conn,id)
-    type=int(input("Tapez 1 s'il s'agit d'un artiste solo, 2 s'il s'agit d'un groupe ou 3 si c'est un artiste solo lié à un groupe"))
+    type=int(input("Tapez 1 s'il s'agit d'un artiste solo, 2 s'il s'agit d'un groupe ou 3 si c'est un artiste solo lié à un groupe \n"))
+    type_test=True
+    while type_test:
+      if type==1:
+        nom=str(input("Entrez le nom de l'artiste à ajouter:\n"))
+        biographie=str(input("Entrez la biographie de l'artiste: \n"))
+        type_test=False
 
-    if type==1:
-      testID=self.test_id(conn,id)
-      nom=str(input("Entrez le nom de l'artiste à ajouter:\n"))
-      biographie=str(input("Entrez la biographie de l'artiste"))
+      elif type==2:
+        nom=str(input("Entrez le nom du groupe à ajouter:\n"))
+        biographie=str(input("Entrez la biographie du groupe: \n"))
+        type_test=False
 
-    elif type==2:
-      nom=str(input("Entrez le nom du groupe à ajouter:\n"))
-      biographie=str(input("Entrez la biographie du groupe"))
-    else:
-      print("Erreur, tapez 1 pour solo ou 2 pour groupe")
+      elif type==3:
+        nom=str(input("Entrez le nom de l'artiste à ajouter:\n"))
+        biographie=str(input("Entrez la biographie de l'artiste \n"))
+        nom_g=str(input("Tapez le nom du groupe auquel appartient l'artiste \n"))
+        test_g=self.test_groupe(conn, nom_g)
+        if test_g==False:
+           nom_g=str(input("Groupe inexistant, tapez le nom du groupe auquel appartient l'artiste \n"))
+           test_g=self.test_groupe(conn, nom_g)
+        type_test=False
+      else:
+        print("Erreur, tapez 1 pour solo, 2 pour groupe ou 3 pour solo appartenant à un groupe \n")
 
     origine=str(input("Entrez son origine : \n"))
 
