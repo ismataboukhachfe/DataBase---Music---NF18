@@ -23,22 +23,30 @@ class Artiste:
     self.origine=origine
     self.biographie=biographie
 
-  def test_groupe(conn, nom_g)-> bool:
-    cur=conn.cursor()
-    sql= "SELECT G.Id_G FROM Groupe as G JOIN Artiste as A ON G.Id_G=A.Id WHERE A.nom=%s" % (nom_g)
-    cur.execute(sql)
+  def test_groupe(conn, nom_g):
+    try:
+      cur=conn.cursor()
+      sql= "SELECT G.Id_G FROM Groupe as G JOIN Artiste as A ON G.Id_G=A.Id WHERE A.nom=%s;" % (nom_g)
+      cur.execute(sql)
+    except psycopg2.DataError as e:
+       print("Erreur : ", e)
+       return False, ""
 
     raw = cur.fetchone()
 
     if raw:
-      return True
+      return True, raw
     else:
-      return False
+      return False, ""
 
   def test_ID(conn, ID)-> int:
-     cur=conn.cursor()
-     sql="SELECT Id FROM Artiste WHERE Id=%s" % (ID)
-     cur.execute(sql)
+     try:
+      cur=conn.cursor()
+      sql="SELECT Id FROM Artiste WHERE Id=%s;" % (ID)
+      cur.execute(sql)
+     except psycopg2.DataError as e:
+      print("Erreur : ", e)
+      return True
 
      raw=cur.fetchone()
      if raw:
@@ -50,7 +58,7 @@ class Artiste:
   def insert(self,conn):
     id=str(input("Entrez le numéro d'ID \n"))
     while testID:
-         id=str(input("ID déjà pris, tapez un ID différent \n"))
+         id=str(input("Tapez un ID différent \n"))
          testID=self.test_id(conn,id)
     type=int(input("Tapez 1 s'il s'agit d'un artiste solo, 2 s'il s'agit d'un groupe ou 3 si c'est un artiste solo lié à un groupe \n"))
     type_test=True
@@ -69,23 +77,53 @@ class Artiste:
         nom=str(input("Entrez le nom de l'artiste à ajouter:\n"))
         biographie=str(input("Entrez la biographie de l'artiste \n"))
         nom_g=str(input("Tapez le nom du groupe auquel appartient l'artiste \n"))
-        test_g=self.test_groupe(conn, nom_g)
+        test_g, id_g=self.test_groupe(conn, nom_g)
         if test_g==False:
-           nom_g=str(input("Groupe inexistant, tapez le nom du groupe auquel appartient l'artiste \n"))
-           test_g=self.test_groupe(conn, nom_g)
+           nom_g=str(input("Tapez un nom de groupe différent \n"))
+           test_g, id_g=self.test_groupe(conn, nom_g)
         type_test=False
       else:
         print("Erreur, tapez 1 pour solo, 2 pour groupe ou 3 pour solo appartenant à un groupe \n")
 
     origine=str(input("Entrez son origine : \n"))
 
-    sql = "INSERT INTO Artiste VALUES (%d, %s, %s, %s)" % (id, nom, biographie, origine)
+    try:
+      cur=conn.cursor() 
+      sql = "INSERT INTO Artiste VALUES (%d, %s, %s, %s);" % (id, nom, biographie, origine)
+      cur.execute(sql)
+
+    except psycopg2.DataError as e:
+      print("Erreur : ", e)
+    
+    if type==1:
+      try:
+        cur=conn.cursor()
+        sql= "INSERT INTO Solo VALUES ('%s', NULL);" % (id)
+        cur.execute(sql)
+      except psycopg2.DataError as e:
+        print("Erreur : ", e)
+
+    if type==2:
+      try:
+        cur=conn.cursor()
+        sql= "INSERT INTO Groupe VALUES ('%s');" % (id)
+        cur.execute(sql)
+      except psycopg2.DataError as e:
+        print("Erreur : ", e)
+    
+    if type==3:
+      try:
+        cur=conn.cursor()
+        sql= "INSERT INTO Solo VALUES ('%s', %s);" % (id, id_g)
+        cur.execute(sql)
+      except psycopg2.DataError as e:
+        print("Erreur : ", e)
 
     return
 
   def afficher(self, conn, ID):
     cur = conn.cursor()
-    sql= "SELECT nom,biographie,origine FROM Artiste WHERE id=%s" %(ID)
+    sql= "SELECT nom,biographie,origine FROM Artiste WHERE id=%s;" %(ID)
     cur.execute(sql)
 
     raw= cur.fetchone()
