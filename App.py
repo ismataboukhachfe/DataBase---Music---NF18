@@ -28,8 +28,9 @@ class Artiste:
       cur=conn.cursor()
       sql= "SELECT G.Id_G FROM Groupe as G JOIN Artiste as A ON G.Id_G=A.Id WHERE A.nom=%s;" % (nom_g)
       cur.execute(sql)
-    except psycopg2.DataError as e:
-       print("Erreur : ", e)
+    except Exception as error:
+       print("Une exception s'est produite : ", error)
+       print("Type d'exception : ", type(error))
        return False, ""
 
     raw = cur.fetchone()
@@ -44,9 +45,10 @@ class Artiste:
       cur=conn.cursor()
       sql="SELECT Id FROM Artiste WHERE Id=%s;" % (ID)
       cur.execute(sql)
-     except psycopg2.DataError as e:
-      print("Erreur : ", e)
-      return True
+     except Exception as error:
+       print("Une exception s'est produite : ", error)
+       print("Type d'exception : ", type(error))
+       return True
 
      raw=cur.fetchone()
      if raw:
@@ -92,39 +94,48 @@ class Artiste:
       sql = "INSERT INTO Artiste VALUES (%d, %s, %s, %s);" % (id, nom, biographie, origine)
       cur.execute(sql)
 
-    except psycopg2.DataError as e:
-      print("Erreur : ", e)
+    except Exception as error:
+       print("Une exception s'est produite : ", error)
+       print("Type d'exception : ", type(error))
     
     if type==1:
       try:
         cur=conn.cursor()
         sql= "INSERT INTO Solo VALUES ('%s', NULL);" % (id)
         cur.execute(sql)
-      except psycopg2.DataError as e:
-        print("Erreur : ", e)
+      except Exception as error:
+       print("Une exception s'est produite : ", error)
+       print("Type d'exception : ", type(error))
 
     if type==2:
       try:
         cur=conn.cursor()
         sql= "INSERT INTO Groupe VALUES ('%s');" % (id)
         cur.execute(sql)
-      except psycopg2.DataError as e:
-        print("Erreur : ", e)
+      except Exception as error:
+       print("Une exception s'est produite : ", error)
+       print("Type d'exception : ", type(error))
     
     if type==3:
       try:
         cur=conn.cursor()
         sql= "INSERT INTO Solo VALUES ('%s', %s);" % (id, id_g)
         cur.execute(sql)
-      except psycopg2.DataError as e:
-        print("Erreur : ", e)
+      except Exception as error:
+       print("Une exception s'est produite : ", error)
+       print("Type d'exception : ", type(error))
 
     return
 
   def afficher(self, conn, ID):
-    cur = conn.cursor()
-    sql= "SELECT nom,biographie,origine FROM Artiste WHERE id=%s;" %(ID)
-    cur.execute(sql)
+    try:
+       cur = conn.cursor()
+       sql= "SELECT nom,biographie,origine FROM Artiste WHERE id=%s;" %(ID)
+       cur.execute(sql)
+
+    except Exception as error:
+       print("Une exception s'est produite : ", error)
+       print("Type d'exception : ", type(error))
 
     raw= cur.fetchone()
     while raw:
