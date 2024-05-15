@@ -227,7 +227,7 @@ class Amis:
             print(rawdata[0], rawdata[1])
             rawdata = cursor.fetchone()
         connection.close()
-
+#----------------------------------------------------------------------------------------------------#
 class Editeur:
     @classmethod
     def inserer(nom):
