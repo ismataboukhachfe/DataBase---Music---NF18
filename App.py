@@ -72,7 +72,7 @@ class Artiste:
      else:
         return False
 
-  def insert(self,conn):
+  def ajouter(self,conn):
     id=str(input("Entrez le numéro d'ID \n"))
     testID=self.test_ID(id)
     while testID:
@@ -279,9 +279,92 @@ class Artiste:
 
 
 
+class DroitsEdition:
+   def ajouter(self, conn, ID_chanson, nom_e):
+      try:
+        cur=conn.cursor()
+        sql = "INSERT INTO DroitsEdition VALUES (%s , '%s');" % (nom_e, ID_chanson)
+        cur.execute(sql)
 
+      except Exception as error:
+        print("Une exception s'est produite : ", error)
+        print("Type d'exception : ", type(error))
+   
+   def afficherdroit(self,conn, id_c):
+      try:
+         cur=conn.cursor()
+         sql =" SELECT id_c, nom_e FROM DroitsEdition WHERE id_c='%s'"%(id_c)
+         cur.execute(sql)
 
-#DroitsEdition.ajouter et DroitsArtistiques.ajouter doivent être dans Chanson.ajouter
+      except Exception as error:
+        print("Une exception s'est produite : ", error)
+        print("Type d'exception : ", type(error))
+
+      raw=cur.fetchone()
+      while raw:
+        print("ID Chanson: %s \n"% raw[0])
+        print("Nom éditeur : %s \n"% raw[1])
+        raw=cur.fetchone()  
+      
+   def afficherliste(self,conn,nom_e):
+      try:
+         cur=conn.cursor()
+         sql =" SELECT id_c, nom_e FROM DroitsEdition WHERE nom_e='%s'"%(nom_e)
+         cur.execute(sql)
+
+      except Exception as error:
+        print("Une exception s'est produite : ", error)
+        print("Type d'exception : ", type(error))   
+
+      raw=cur.fetchone()
+      while raw:
+        print("ID Chanson: %s \n"% raw[0])
+        print("Nom éditeur : %s \n"% raw[1])
+        raw=cur.fetchone()  
+class DroitsArtistiques:
+   def ajouter(self,conn,ID_chanson, ID_Artiste, type):
+      try:
+        cur=conn.cursor()
+        sql = "INSERT INTO DroitsArtistiques VALUES ('%s' , '%s', %s);" % (ID_chanson,ID_Artiste, type)
+        cur.execute(sql)
+
+      except Exception as error:
+        print("Une exception s'est produite : ", error)
+        print("Type d'exception : ", type(error))
+
+   def afficherdroit(self,conn, id_c):
+      try:
+         cur=conn.cursor()
+         sql =" SELECT id_c, id_a, type FROM DroitsArtistiques WHERE id_c='%s'"%(id_c)
+         cur.execute(sql)
+
+      except Exception as error:
+        print("Une exception s'est produite : ", error)
+        print("Type d'exception : ", type(error))
+
+      raw=cur.fetchone()
+      while raw:
+        print("ID Chanson: %s \n"% raw[0])
+        print("ID Artiste : %s \n"% raw[1])
+        print("Type : %s \n"% raw[2])
+        raw=cur.fetchone()     
+      
+   def afficherliste(self,conn,id_a):
+      try:
+         cur=conn.cursor()
+         sql =" SELECT id_c, id_a, type FROM DroitsArtistiques WHERE id_a='%s'"%(id_a)
+         cur.execute(sql)
+
+      except Exception as error:
+        print("Une exception s'est produite : ", error)
+        print("Type d'exception : ", type(error))
+
+      raw=cur.fetchone()
+      while raw:
+        print("ID Chanson: %s \n"% raw[0])
+        print("ID Artiste : %s \n"% raw[1])
+        print("Type : %s \n"% raw[2])
+        raw=cur.fetchone()     
 
 
 class Interrogation:
@@ -955,7 +1038,7 @@ class Editeur:
             rawdata = cursor.fetchone()
         
 
-choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Questions SQL \n 2 : Afficher des données \n 3 : Modifier la BDD\n 4 : Insérer une donnée\n Autre pour quitter \n"))
+choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Questions SQL \n 2 : Afficher des données \n 3 : Modifier la BDD\n 4 : Insérer une donnée\n 5 : Supprimer un élément d'une table\n Autre pour quitter \n"))
 while choix1>0 and choix1<4:
   if choix1==1:
       choixQ=int(input("Tapez le numéro correspondant à votre choix:\n 1 : Q1\n 2 : Q2\n 3 : Q3\n 4 : Q4\n"))
@@ -970,7 +1053,7 @@ while choix1>0 and choix1<4:
 
 
   elif choix1==2:
-      choixA=int(input("Afficher :\n1: Utilisateur\n2:Artiste\n3:Chanson\n4:Album\n5:Editeur\n6:Genre musical\n7:Historique d'un utilisateur\n8:Préférences d'un utilisateur\n9:Playlists d'un utilisateur\n10:Amis d'un utilisateur\n"))
+      choixA=int(input("Afficher :\n1:Utilisateur\n2:Artiste\n3:Chanson\n4:Album\n5:Editeur\n6:Genre musical\n7:Historique d'un utilisateur\n8:Préférences d'un utilisateur\n9:Playlists d'un utilisateur\n10:Amis d'un utilisateur\n"))
 
       if choixA==1:
           Utilisateur.affichage(Utilisateur, conn)          
@@ -1002,5 +1085,26 @@ while choix1>0 and choix1<4:
       elif choixA==10:
           Amis.afficherParCondition(conn,1)
          
-  choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Questions SQL \n 2 : Afficher des données \n 3 : Modifier la BDD\n 4 : Insérer une donnée\n Autre pour quitter \n"))
+  elif choix1==3:
+     f = """Modifier la table : \n1:Utilisateur\n2:Artiste\n3:Chanson\n
+     4:Album\n5:Editeur\n6:Genre musical\n7:Historique\n
+     8:Préférences\n9:Playlists\n10:Amis\n
+     11:DroitsEdition\n12:DroitsArtistiques\n"""
+  
+     print(f)
+
+
+  elif choix1==4:
+     f = """Insérer une donnée dans la table : \n1:Utilisateur\n2:Artiste\n3:Chanson\n
+     4:Album\n5:Editeur\n6:Genre musical\n7:Historique\n
+     8:Préférences\n9:Playlists\n10:Amis\n
+     11:DroitsEdition\n12:DroitsArtistiques\n"""
+  
+  elif choix1==5:
+     f = """Supprimer une donnée de la table : \n1:Utilisateur\n2:Artiste\n3:Chanson\n
+     4:Album\n5:Editeur\n6:Genre musical\n7:Historique\n
+     8:Préférences\n9:Playlists\n10:Amis\n
+     11:DroitsEdition\n12:DroitsArtistiques\n"""
+
+  choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Questions SQL \n 2 : Afficher des données \n 3 : Modifier la BDD\n 4 : Insérer une donnée\n 5 : Supprimer un élément d'une table\n Autre pour quitter \n"))
   
