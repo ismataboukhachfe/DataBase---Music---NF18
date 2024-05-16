@@ -1,4 +1,19 @@
 #Fichier pour  creer l'application python de manipulation de donnees 
+import psycopg2
+
+HOST ="tuxa.sme.utc"
+USER = "nf18p032"
+PASSWORD = "Fb9EyCL7x6mZ"
+DATABASE = "dbnf18p032"
+
+try :
+	conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
+	print("Connexion réussie \n")
+    #conn.close()
+	
+except Exception as error:
+	print("Une exception s'est produite : ", error)
+	print("Type d'exception : ", type(error))
 
 class Utilisateur : 
     
@@ -153,22 +168,8 @@ class Genre :
         cur.close()
         print(f"Utilisateur '{self.nom}' a été supprimé.")
 
-        
-
-    
-    
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-    
+choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Questions SQL \n 2 : Afficher des données \n 3 : Modifier la BDD\n Autre pour quitter \n"))
+while choix1>0 and choix1<4:
+	if choix1==1:
+		choixQ=int(input("Tapez le numéro correspondant à votre choix:\n 1 : Q1\n 2 : Q2\n 3 : Q3\n 4 : Q4\n"))
+		
