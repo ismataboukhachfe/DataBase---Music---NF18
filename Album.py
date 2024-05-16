@@ -6,7 +6,6 @@ class Album:
         self.sortie = sortie
         self.artiste = artiste
 
-    @staticmethod
     def test_ID(conn, ID) -> bool:
         cur = conn.cursor()
         sql = "SELECT Id FROM Artiste WHERE Id = %s"
@@ -64,7 +63,6 @@ class Album:
         cur.close()
         print(f"Album '{id}' a été supprimé.")
 
-    @staticmethod
     def affichage(conn):
         sql = "SELECT * FROM Album"
         cur = conn.cursor()
