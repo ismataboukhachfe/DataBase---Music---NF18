@@ -62,7 +62,7 @@ class Utilisateur :
         cur.close()        
         
     def delete(self, conn, nom):
-        sql = "DELETE FROM utilisateur WHERE nom_utilisateur = '/s " % nom
+        sql = "DELETE FROM utilisateur WHERE nom_utilisateur = '%s " % nom
         
         cur = conn.cursor()
         cur.execute(sql)
@@ -86,3 +86,10 @@ class Utilisateur :
             print(f"Date d'inscription: {user[4]}")
         else:
             print(f"Utilisateur avec le nom '{nom}' non trouvé.")
+
+
+choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Questions SQL \n 2 : Afficher des données \n 3 : Modifier la BDD\n Autre pour quitter \n"))
+while choix1>0 and choix1<4:
+	if choix1==1:
+		choixQ=int(input("Tapez le numéro correspondant à votre choix:\n 1 : Q1\n 2 : Q2\n 3 : Q3\n 4 : Q4\n"))
+		
