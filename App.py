@@ -184,8 +184,6 @@ class Artiste:
         if test_groupe:
            print("Type : Groupe \n")
     
-        else:
-           print("Type: Solo \n")
     
         while raw:
           print("ID : %s \n"% raw[0])
@@ -1053,13 +1051,14 @@ while choix1>0 and choix1<4:
 
 
   elif choix1==2:
-      f"""Afficher :\n1:Utilisateur\n2:Artiste\n3:Chanson\n4:Album\n
+      f="""Afficher :\n1:Utilisateur\n2:Artiste\n3:Chanson\n4:Album\n
       5:Editeurs\n6:Genres musicaux\n7:Historique d'un utilisateur\n
       8:Préférences d'un utilisateur\n9:Playlists d'un utilisateur\n
       10:Amis d'un utilisateur\n11:Droits d'édition d'une chanson ou d'un éditeur\n
       12:Droits artistiques d'une chanson ou d'un artiste"""
-      choixA=int(input("Afficher :\n1:Utilisateur\n2:Artiste\n3:Chanson\n4:Album\n5:Editeur\n6:Genre musical\n7:Historique d'un utilisateur\n8:Préférences d'un utilisateur\n9:Playlists d'un utilisateur\n10:Amis d'un utilisateur\n"))
-
+      print(f)
+      choixA=int(input())
+      
       if choixA==1:
           Utilisateur.affichage(Utilisateur, conn)          
 
