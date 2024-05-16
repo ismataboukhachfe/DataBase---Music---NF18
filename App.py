@@ -144,8 +144,31 @@ class Artiste:
     return
 
   def afficher(self, conn):
-    ID=str(input("Tapez l'ID de l'artiste \n"))
+    ID=str(input("Tapez l'ID de l'artiste ou tapez 0 pour afficher tous les artistes\n"))
+    if ID==0:
+       try:
+        cur = conn.cursor()
+        sql= "SELECT id,nom,biographie,origine FROM Artiste WHERE id='%s';" %(ID)
+        cur.execute(sql)
+
+       except Exception as error:
+        print("Une exception s'est produite : ", error)
+        print("Type d'exception : ", type(error))
+
+       raw= cur.fetchone()
+
+
+       while raw:
+         print("ID : %s \n"% raw[0])
+         print("Nom : %s \n"% raw[1])
+         print("Biographie : %s \n"% raw[2])
+         print("Origine : %s \n"% raw[3])
+         raw=cur.fetchone()
+
+
+
     test_groupe=self.test_ID_g(conn,ID)
+
 
     try:
        cur = conn.cursor()
@@ -617,9 +640,9 @@ class Chanson:
         
     def modifier(self,conn):
     
-        id = str(input("Id : "))
+        self.id = str(input("Id : "))
         while not(self.test_ID(conn,id)):
-            id = str(input("Id : "))
+            self.id = str(input("Id : "))
 
         self.titre = str(input("Titre : "))
         self.duree = str(input("Duree : "))
@@ -628,7 +651,7 @@ class Chanson:
         self.genre = str(input("Genre : "))
 
     
-        sql = "UPDATE Chanson SET Titre = '%s', Duree = '%s', Pays = '%s', Album = '%s', Genre ='%s' WHERE id = '%s' " % (self.titre, self.duree, self.pays, self.album, self.genre, selfid) 
+        sql = "UPDATE Chanson SET Titre = '%s', Duree = '%s', Pays = '%s', Album = '%s', Genre ='%s' WHERE id = '%s' " % (self.titre, self.duree, self.pays, self.album, self.genre, self.id) 
         
         cur = conn.cursor()
         cur.execute(sql)
@@ -981,5 +1004,15 @@ while choix1>0 and choix1<4:
 
       elif choixA==7:
          Historique.afficherParCondition(conn,1)
+
+      #elif choixA==8:
+      #   Preferences.affichage(conn)
+
+      #elif choixA==9:
+      #   Playlist.affichage(conn)
+
+      elif choixA==10:
+          Amis.afficherParCondition(conn,1)
+         
   choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Questions SQL \n 2 : Afficher des données \n 3 : Modifier la BDD\n Autre pour quitter \n"))
   
