@@ -90,5 +90,5 @@ class Chanson:
             print(f"Album: {song[4]}")
             print(f"Genre: {song[5]}")
         else:
-            print(f"Utilisateur avec le nom '{song}' non trouvé.")
+            print(f"Chanson avec le nom '{song}' non trouvé.")
         
