@@ -1,4 +1,4 @@
-#Fichier pour  creer l'application python de manipulation de donnees 
+#Fichier pour  creer l'application python de manipulation de donnees
 
 import psycopg2
 
@@ -11,7 +11,7 @@ try :
 	conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
 	print("Connexion réussie \n")
     #conn.close()
-	
+
 except Exception as error:
 	print("Une exception s'est produite : ", error)
 	print("Type d'exception : ", type(error))
@@ -55,7 +55,7 @@ class Artiste:
         return True
      else:
         return False
-     
+
   def test_ID_g(conn, ID)-> int:
      try:
       cur=conn.cursor()
@@ -65,7 +65,7 @@ class Artiste:
        print("Une exception s'est produite : ", error)
        print("Type d'exception : ", type(error))
        return False
-     
+
      raw=cur.fetchone()
      if raw:
         return True
@@ -105,14 +105,14 @@ class Artiste:
     origine=str(input("Entrez son origine : \n"))
 
     try:
-      cur=conn.cursor() 
+      cur=conn.cursor()
       sql = "INSERT INTO Artiste VALUES (%d, %s, %s, %s);" % (id, nom, biographie, origine)
       cur.execute(sql)
 
     except Exception as error:
        print("Une exception s'est produite : ", error)
        print("Type d'exception : ", type(error))
-    
+
     if type==1:
       try:
         cur=conn.cursor()
@@ -130,7 +130,7 @@ class Artiste:
       except Exception as error:
        print("Une exception s'est produite : ", error)
        print("Type d'exception : ", type(error))
-    
+
     if type==3:
       try:
         cur=conn.cursor()
@@ -144,7 +144,7 @@ class Artiste:
 
   def afficher(self, conn, ID):
     test_groupe=self.test_ID_g
-        
+
     try:
        cur = conn.cursor()
        sql= "SELECT id,nom,biographie,origine FROM Artiste WHERE id=%s;" %(ID)
@@ -175,7 +175,7 @@ class Artiste:
     test_id=self.test_ID()
     if test_id==False:
        print("Artiste non trouvé")
-    
+
     if test_id:
        print("Que voulez-vous modifier? \n")
        choix=int(input("Tapez 1 pour le nom, 2 pour la biographie, 3 pour l'origine, 0 pour quitter \n"))
@@ -192,7 +192,7 @@ class Artiste:
           except Exception as error:
             print("Une exception s'est produite : ", error)
             print("Type d'exception : ", type(error))
-       
+
        if choix==2:
           biographie=str(input("Tapez le nouveau nom : \n"))
           try:
@@ -203,7 +203,7 @@ class Artiste:
           except Exception as error:
             print("Une exception s'est produite : ", error)
             print("Type d'exception : ", type(error))
-          
+
        if choix==3:
           origine=str(input("Tapez le nouveau nom : \n"))
           try:
@@ -250,12 +250,12 @@ class Artiste:
        except Exception as error:
             print("Une exception s'est produite : ", error)
             print("Type d'exception : ", type(error))
-  
 
 
 
 
-#DroitsEdition.ajouter et DroitsArtistiques.ajouter doivent être dans Chanson.ajouter 
+
+#DroitsEdition.ajouter et DroitsArtistiques.ajouter doivent être dans Chanson.ajouter
 
 
 class Interrogation:
@@ -268,14 +268,14 @@ class Interrogation:
       except Exception as error:
         print("Une exception s'est produite : ", error)
         print("Type d'exception : ", type(error))
-    
+
       raw=cur.fetchone()
       print("Nom   Durée moyenne \n")
       while raw:
          print(raw[0], raw[1])
          raw=cur.fetchone()
-    
-   
+
+
    def Q2(conn):
       try:
         cur = conn.cursor()
@@ -285,14 +285,14 @@ class Interrogation:
       except Exception as error:
         print("Une exception s'est produite : ", error)
         print("Type d'exception : ", type(error))
-    
+
       raw=cur.fetchone()
       print("Nom   Nombre de chansons \n")
       while raw:
          print(raw[0], raw[1])
          raw=cur.fetchone()
-    
-   
+
+
    def Q3(conn):
       try:
         cur = conn.cursor()
@@ -308,13 +308,13 @@ class Interrogation:
       except Exception as error:
         print("Une exception s'est produite : ", error)
         print("Type d'exception : ", type(error))
-    
+
       raw=cur.fetchone()
       print("Nom de l'artiste  Durée de la chanson \n")
       while raw:
          print(raw[0], raw[1])
          raw=cur.fetchone()
-   
+
    def Q4(conn):
       try:
         cur = conn.cursor()
@@ -324,78 +324,78 @@ class Interrogation:
       except Exception as error:
         print("Une exception s'est produite : ", error)
         print("Type d'exception : ", type(error))
-    
+
       raw=cur.fetchone()
       print("Nom de l'artiste  Durée de la chanson \n")
       while raw:
          print(raw[0], raw[1])
          raw=cur.fetchone()
-      
-      
 
-class Utilisateur : 
-    
+
+
+class Utilisateur :
+
     def __init__(self,identifiant,nom_utilisateur, motdepasse,adressemail,dateinscription ):
-       
-        self.identifiant = identifiant 
-        self.nom_utilisateur = nom_utilisateur 
+
+        self.identifiant = identifiant
+        self.nom_utilisateur = nom_utilisateur
         self.motdepasse = motdepasse
-        self.adressemail = adressemail 
-        self.dateinscription = dateinscription 
-        
-        
+        self.adressemail = adressemail
+        self.dateinscription = dateinscription
+
+
     def ajouter(self,conn) :
-        
+
         self.identifiant = str(input("Entrer l'identifiant : "))
         self.nom_utilisateur = str(input("Entrer le nom_utilisateur : "))
         self.motdepasse = str(input("Entrer le mot de passe : "))
         self.adressemail = str(input("Entrer l'adressemail: "))
         self.dateinscription = str(input("Entrer la date d'inscription : "))
-        
+
         sql = "INSERT INTO utilisateur VALUES ('%s', '%s', '%s','%s','%s')" % (identifiant, nom_utilisateur, motdepasse,adressemail,dateinscription)
-        
+
         cur = conn.cursor()
         cur.execute(sql)
         conn.commit()
         conn.close()
-        
+
     def modifier(self,conn,identifiant, nom_utilisateur, motdepasse, adressemail, dateinscription):
-    
-        self.identifiant = identifiant 
-        self.nom_utilisateur = nom_utilisateur 
+
+        self.identifiant = identifiant
+        self.nom_utilisateur = nom_utilisateur
         self.motdepasse = motdepasse
-        self.adressemail = adressemail 
-        self.dateinscription = dateinscription 
-    
-    
+        self.adressemail = adressemail
+        self.dateinscription = dateinscription
+
+
         sql = """
         UPDATE utilisateur
         SET nom_utilisateur = '%s', motdepasse = '%s', adressemail = '%s', dateinscription = '%s'
-        WHERE identifiant = '%s'% (nom_utilisateur, motdepasse,adressemail,dateinscription,identifiant) 
+        WHERE identifiant = '%s'% (nom_utilisateur, motdepasse,adressemail,dateinscription,identifiant)
         """
-        
+
         cur = conn.cursor()
         cur.execute(sql)
         conn.commit()
-        cur.close()        
-        
+        cur.close()
+
     def delete(self, conn, nom):
         sql = "DELETE FROM utilisateur WHERE nom_utilisateur = '%s " % nom
-        
+
         cur = conn.cursor()
         cur.execute(sql)
         conn.commit()
         cur.close()
         print(f"Utilisateur '{nom}' a été supprimé.")
-        
-    def affichage(self,conn,nom) : 
+
+    def affichage(self,conn,nom) :
         sql = "SELECT * FROM utilisateur WHERE nom_utilisateur = '%s'" % nom
-    
+
         cur = conn.cursor()
         cur.execute(sql)
         user = cur.fetchone()
         cur.close()
-    
+
         if user:
             print(f"Identifiant: {user[0]}")
             print(f"Nom d'utilisateur: {user[1]}")
@@ -421,9 +421,9 @@ while choix1>0 and choix1<4:
 
 
   if choix1==2:
-    choixA=int(input("Afficher :\n 1: Utilisateur\n2:Artiste\n3:Chanson\n4:Album\n5:Editeur\n6:Genre musical\n7:Historique d'un utilisateur\n8:Préférences d'un utilisateur\n9:Playlists d'un utilisateur\n10:Amis d'un utilisateur"))
-    
-    if choixA==1:
-       nomU=str(input("Tapez le nom de l'utilisateur à afficher"))
-       Utilisateur.affichage(conn, nomU)
-       
+      choixA=int(input("Afficher :\n 1: Utilisateur\n2:Artiste\n3:Chanson\n4:Album\n5:Editeur\n6:Genre musical\n7:Historique d'un utilisateur\n8:Préférences d'un utilisateur\n9:Playlists d'un utilisateur\n10:Amis d'un utilisateur"))
+
+      if choixA==1: 
+          user=Utilisateur() 
+          nomU=str(input("Tapez le nom de l'utilisateur à afficher")) 
+          Utilisateur.affichage(user,conn, nomU)
