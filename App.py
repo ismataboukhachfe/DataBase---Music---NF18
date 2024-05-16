@@ -146,7 +146,7 @@ class Artiste:
         
     try:
        cur = conn.cursor()
-       sql= "SELECT nom,biographie,origine FROM Artiste WHERE id=%s;" %(ID)
+       sql= "SELECT id,nom,biographie,origine FROM Artiste WHERE id=%s;" %(ID)
        cur.execute(sql)
 
     except Exception as error:
@@ -162,10 +162,13 @@ class Artiste:
        print("Type: Solo \n")
 
     while raw:
-      print("Nom : %s \n", raw[0])
-      print("Biographie : %s \n", raw[1])
-      print("Origine : %s \n", raw[2])
+      print("ID : %s \n", raw[0])
+      print("Nom : %s \n", raw[1])
+      print("Biographie : %s \n", raw[2])
+      print("Origine : %s \n", raw[3])
       raw=cur.fetchone()
+
+
 
   def modifier(self, conn, ID):
     test_id=self.test_ID()
@@ -182,7 +185,7 @@ class Artiste:
           nom=str(input("Tapez le nouveau nom : \n"))
           try:
             cur = conn.cursor()
-            sql= "SELECT nom,biographie,origine FROM Artiste WHERE id=%s;" %(ID)  #à changer
+            sql= "UPDATE Artiste SET Artiste.nom=%s WHERE Artiste.id=%s;" %(nom, ID)
             cur.execute(sql)
 
           except Exception as error:
@@ -193,7 +196,7 @@ class Artiste:
           biographie=str(input("Tapez le nouveau nom : \n"))
           try:
             cur = conn.cursor()
-            sql= "SELECT nom,biographie,origine FROM Artiste WHERE id=%s;" %(ID)  #à changer
+            sql= "UPDATE Artiste SET Artiste.biographie=%s WHERE Artiste.id=%s;" %(biographie, ID)
             cur.execute(sql)
 
           except Exception as error:
@@ -204,13 +207,48 @@ class Artiste:
           origine=str(input("Tapez le nouveau nom : \n"))
           try:
             cur = conn.cursor()
-            sql= "SELECT nom,biographie,origine FROM Artiste WHERE id=%s;" %(ID)  #à changer
+            sql= "UPDATE Artiste SET Artiste.origine=%s WHERE Artiste.id=%s;" %(origine, ID)
             cur.execute(sql)
 
           except Exception as error:
             print("Une exception s'est produite : ", error)
             print("Type d'exception : ", type(error))
 
+  def supprimer(self, conn, ID):
+    test_id=self.test_ID()
+    if test_id==False:
+      print("Artiste non trouvé")
+
+    if test_id:
+       test_id_g=self.test_ID_g()
+       if test_id_g:
+          try:
+            cur = conn.cursor()
+            sql= "DELETE FROM Groupe WHERE Groupe.id_g=%s;" %(ID)
+            cur.execute(sql)
+
+          except Exception as error:
+            print("Une exception s'est produite : ", error)
+            print("Type d'exception : ", type(error))
+
+       else:
+          try:
+            cur = conn.cursor()
+            sql= "DELETE FROM Solo WHERE Solo.id_S=%s;" %(ID)
+            cur.execute(sql)
+
+          except Exception as error:
+            print("Une exception s'est produite : ", error)
+            print("Type d'exception : ", type(error))
+
+       try:
+            cur = conn.cursor()
+            sql= "DELETE FROM Artiste WHERE Artiste.id=%s;" %(ID)
+            cur.execute(sql)
+
+       except Exception as error:
+            print("Une exception s'est produite : ", error)
+            print("Type d'exception : ", type(error))
   
 
 
