@@ -10,7 +10,7 @@ DATABASE = "dbnf18p032"
 try :
 	conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
 	print("Connexion réussie \n")
-    #conn.close()
+    #
 
 except Exception as error:
 	print("Une exception s'est produite : ", error)
@@ -145,10 +145,10 @@ class Artiste:
 
   def afficher(self, conn):
     ID=str(input("Tapez l'ID de l'artiste ou tapez 0 pour afficher tous les artistes\n"))
-    if ID==0:
+    if ID=='0':
        try:
         cur = conn.cursor()
-        sql= "SELECT id,nom,biographie,origine FROM Artiste WHERE id='%s';" %(ID)
+        sql= "SELECT id,nom,biographie,origine FROM Artiste ;"
         cur.execute(sql)
 
        except Exception as error:
@@ -166,33 +166,33 @@ class Artiste:
          raw=cur.fetchone()
 
 
-
-    test_groupe=self.test_ID_g(conn,ID)
-
-
-    try:
-       cur = conn.cursor()
-       sql= "SELECT id,nom,biographie,origine FROM Artiste WHERE id='%s';" %(ID)
-       cur.execute(sql)
-
-    except Exception as error:
-       print("Une exception s'est produite : ", error)
-       print("Type d'exception : ", type(error))
-
-    raw= cur.fetchone()
-
-    if test_groupe:
-       print("Type : Groupe \n")
-
     else:
-       print("Type: Solo \n")
-
-    while raw:
-      print("ID : %s \n"% raw[0])
-      print("Nom : %s \n"% raw[1])
-      print("Biographie : %s \n"% raw[2])
-      print("Origine : %s \n"% raw[3])
-      raw=cur.fetchone()
+        test_groupe=self.test_ID_g(conn,ID)
+    
+    
+        try:
+           cur = conn.cursor()
+           sql= "SELECT id,nom,biographie,origine FROM Artiste WHERE id='%s';" %(ID)
+           cur.execute(sql)
+    
+        except Exception as error:
+           print("Une exception s'est produite : ", error)
+           print("Type d'exception : ", type(error))
+    
+        raw= cur.fetchone()
+    
+        if test_groupe:
+           print("Type : Groupe \n")
+    
+        else:
+           print("Type: Solo \n")
+    
+        while raw:
+          print("ID : %s \n"% raw[0])
+          print("Nom : %s \n"% raw[1])
+          print("Biographie : %s \n"% raw[2])
+          print("Origine : %s \n"% raw[3])
+          raw=cur.fetchone()
 
 
 
@@ -400,8 +400,8 @@ class Utilisateur :
         
         cur = conn.cursor()
         cur.execute(sql)
-        conn.commit()
-        conn.close()
+        
+        
         
     def modifier(self,conn):
         
@@ -424,7 +424,7 @@ class Utilisateur :
         
         cur = conn.cursor()
         cur.execute(sql)
-        conn.commit()
+        
         cur.close()        
     
     
@@ -435,7 +435,7 @@ class Utilisateur :
         
         cur = conn.cursor()
         cur.execute(sql)
-        conn.commit()
+        
         cur.close()
         print(f"Utilisateur '{self.nom_utilisateur}' a été supprimé.")
         
@@ -487,8 +487,8 @@ class Genre :
         
         cur = conn.cursor()
         cur.execute(sql)
-        conn.commit()
-        conn.close()
+        
+        
         
     def affichage(self, conn):
         sql = "SELECT * FROM genre"
@@ -508,7 +508,7 @@ class Genre :
         
         cur = conn.cursor()
         cur.execute(sql)
-        conn.commit()
+        
         cur.close()
         print(f"Utilisateur '{self.nom}' a été supprimé.")
 
@@ -520,7 +520,7 @@ class Album:
         self.sortie = sortie
         self.artiste = artiste
 
-    @staticmethod
+    
     def test_ID(conn, ID) -> bool:
         cur = conn.cursor()
         sql = "SELECT Id FROM Artiste WHERE Id = %s"
@@ -544,7 +544,7 @@ class Album:
         VALUES (%s, %s, %s, %s)
         """
         cur.execute(sql, (self.id, self.titre, self.sortie, self.artiste))
-        conn.commit()
+        
         cur.close()
 
     def modifier(self, conn):
@@ -563,7 +563,7 @@ class Album:
         """
         cur = conn.cursor()
         cur.execute(sql, (self.titre, self.sortie, self.artiste, id))
-        conn.commit()
+        
         cur.close()
 
     def delete(self, conn):
@@ -574,11 +574,10 @@ class Album:
         sql = "DELETE FROM Album WHERE Id = %s"
         cur = conn.cursor()
         cur.execute(sql, (id,))
-        conn.commit()
+        
         cur.close()
         print(f"Album '{id}' a été supprimé.")
 
-    @staticmethod
     def affichage(conn):
         sql = "SELECT * FROM Album"
         cur = conn.cursor()
@@ -635,8 +634,8 @@ class Chanson:
         cur = conn.cursor()
         sql = "INSERT INTO Chanson (Id, Titre, Duree, Pays, Album, Genre) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')"
         cur.execute(sql, (self.id, self.titre, self.duree, self.pays, self.album, self.genre))
-        conn.commit()
-        conn.close()
+        
+        
         
     def modifier(self,conn):
     
@@ -655,7 +654,7 @@ class Chanson:
         
         cur = conn.cursor()
         cur.execute(sql)
-        conn.commit()
+        
         cur.close()   
         
     def delete(self, conn):
@@ -667,7 +666,7 @@ class Chanson:
         
         cur = conn.cursor()
         cur.execute(sql)
-        conn.commit()
+        
         cur.close()
         print(f"Utilisateur '{id}' a été supprimé.")
 
@@ -697,7 +696,7 @@ class ContientAlbum:
         self.album = album
         self.playlist = playlist
 
-    @staticmethod
+    
     def test_ID(conn, table, ID) -> bool:
         cur = conn.cursor()
         sql = "SELECT Id FROM %s WHERE Id = %%s" % table
@@ -721,7 +720,7 @@ class ContientAlbum:
         VALUES (%s, %s)
         """
         cur.execute(sql, (self.album, self.playlist))
-        conn.commit()
+        
         cur.close()
 
     def modifier(self, conn):
@@ -746,7 +745,7 @@ class ContientAlbum:
         """
         cur = conn.cursor()
         cur.execute(sql, (self.album, self.playlist, old_album, old_playlist))
-        conn.commit()
+        
         cur.close()
 
     def delete(self, conn):
@@ -759,11 +758,11 @@ class ContientAlbum:
         sql = "DELETE FROM ContientAlbum WHERE album = %s AND playlist = %s"
         cur = conn.cursor()
         cur.execute(sql, (album, playlist))
-        conn.commit()
+        
         cur.close()
         print(f"Liaison entre l'album '{album}' et la playlist '{playlist}' a été supprimée.")
 
-    @staticmethod
+    
     def affichage(conn):
         sql = "SELECT * FROM ContientAlbum"
         cur = conn.cursor()
@@ -780,192 +779,181 @@ class ContientAlbum:
             print("Aucune liaison trouvée.")
 
 class ContientChanson:
-    @classmethod
-    def inserer(connection,idPlaylist, idChanson):
+
+    def inserer(conn,idPlaylist, idChanson):
         cursor = conn.cursor()
         insertion = "INSERT INTO ContientChanson VALUES ('%s', '%s')" % (idPlaylist, idChanson)
         cursor.execute(insertion)
-        connection.commit()
-        connection.close()
+        
+        
 
-    @classmethod
-    def modifier(connection,colonne, valeur, condition):
+    
+    def modifier(conn,colonne, valeur, condition):
         cursor = conn.cursor()
         modification = "UPDATE ContientChanson SET %s = %s WHERE %s" % (colonne, valeur, condition)
         cursor.execute(modification)
-        connection.commit()
-        connection.close()
+        
+        
 
-    @classmethod
-    def supprimer(connection,condition):
-        cursor = connection.cursor()
+    def supprimer(conn,condition):
+        cursor = conn.cursor()
         suppression = "DELETE FROM ContientChanson WHERE %s" % (condition)
         cursor.execute(suppression)
-        connection.commit()
-        connection.close()
+        
+        
 
-    @classmethod
-    def afficherTous(connection):
-        cursor = connection.cursor()
+    def afficherTous(conn):
+        cursor = conn.cursor()
         affichage = "SELECT * FROM ContientChanson"
         cursor.execute(affichage)
         rawdata = cursor.fetchone()
         while rawdata:
             print(rawdata[0], rawdata[1])
             rawdata = cursor.fetchone()
-        connection.close()
+        
 	    
-    @classmethod
-    def afficherParCondition(connection,condition):
-        cursor = connection.cursor()
+    def afficherParCondition(conn,condition):
+        cursor = conn.cursor()
         affichage = "SELECT * FROM ContientChanson WHERE %s" % (condition)
         cursor.execute(affichage)
         rawdata = cursor.fetchone()
         while rawdata:
             print(rawdata[0], rawdata[1])
             rawdata = cursor.fetchone()
-        connection.close()
+        
 #----------------------------------------------------------------------------------------------------#
 class Historique:
-    @classmethod
-    def inserer(connection,chanson, utilisateur, compteur):
-        cursor = connection.cursor()
+    def inserer(conn,chanson, utilisateur, compteur):
+        cursor = conn.cursor()
         insertion = "INSERT INTO Historique VALUES ('%s', '%s', '%s')" % (chanson, utilisateur, compteur)
         cursor.execute(insertion)
-        connection.commit()
-        connection.close()
+        
+        
 
-    @classmethod
-    def modifier(connection,colonne, valeur, condition):
-        cursor = connection.cursor()
+    def modifier(conn,colonne, valeur, condition):
+        cursor = conn.cursor()
         modification = "UPDATE Historique SET %s = %s WHERE %s" % (colonne, valeur, condition)
         cursor.execute(modification)
-        connection.commit()
-        connection.close()
+        
+        
 
-    @classmethod
-    def supprimer(connection,condition):
-        cursor = connection.cursor()
+    def supprimer(conn,condition):
+        cursor = conn.cursor()
         suppression = "DELETE FROM Historique WHERE %s" % (condition)
         cursor.execute(suppression)
-        connection.commit()
-        connection.close()
+        
+        
 
-    @classmethod
-    def afficherTous(connection):
-        cursor = connection.cursor()
+    def afficherTous(conn):
+        cursor = conn.cursor()
         affichage = "SELECT * FROM Historique"
         cursor.execute(affichage)
         rawdata = cursor.fetchone()
         while rawdata:
             print(rawdata[0], rawdata[1], rawdata[2])
             rawdata = cursor.fetchone()
-        connection.close()
+        
 
-    @classmethod
-    def afficherParCondition(connection,condition):
-        cursor = connection.cursor()
+    def afficherParCondition(conn,condition):
+        cursor = conn.cursor()
         affichage = "SELECT * FROM Historique WHERE %s" % (condition)
         cursor.execute(affichage)
         rawdata = cursor.fetchone()
         while rawdata:
             print(rawdata[0], rawdata[1], rawdata[2])
             rawdata = cursor.fetchone()
-        connection.close()
+        
 #----------------------------------------------------------------------------------------------------#
 class Amis:
-    @classmethod
-    def inserer(connection,utilisateur1, utilisateur2):
-        cursor = connection.cursor()
+    def inserer(conn,utilisateur1, utilisateur2):
+        cursor = conn.cursor()
         insertion = "INSERT INTO Amis VALUES ('%s', '%s')" % (utilisateur1, utilisateur2)
         cursor.execute(insertion)
-        connection.commit()
-        connection.close()
+        
+        
 
-    @classmethod
-    def modifier(connection,colonne, valeur, condition):
-        cursor = connection.cursor()
+    def modifier(conn,colonne, valeur, condition):
+        cursor = conn.cursor()
         modification = "UPDATE Amis SET %s = %s WHERE %s" % (colonne, valeur, condition)
         cursor.execute(modification)
-        connection.commit()
-        connection.close()
+        
+        
 
-    @classmethod
-    def supprimer(connection,condition):
-        cursor = connection.cursor()
+    def supprimer(conn,condition):
+        cursor = conn.cursor()
         suppression = "DELETE FROM Amis WHERE %s" % (condition)
         cursor.execute(suppression)
-        connection.commit()
-        connection.close()
-
-    @classmethod
-    def afficherTous(connection):
-        cursor = connection.cursor()
+        
+        
+    def afficherTous(conn):
+        cursor = conn.cursor()
         affichage = "SELECT * FROM Amis"
         cursor.execute(affichage)
         rawdata = cursor.fetchone()
         while rawdata:
             print(rawdata[0], rawdata[1])
             rawdata = cursor.fetchone()
-        connection.close()
+        
 
-    @classmethod
-    def afficherParCondition(connection,condition):
-        cursor = connection.cursor()
+    def afficherParCondition(conn,condition):
+        cursor = conn.cursor()
         affichage = "SELECT * FROM Amis WHERE %s" % (condition)
         cursor.execute(affichage)
         rawdata = cursor.fetchone()
         while rawdata:
             print(rawdata[0], rawdata[1])
             rawdata = cursor.fetchone()
-        connection.close()
+        
 #----------------------------------------------------------------------------------------------------#
 class Editeur:
-    @classmethod
-    def inserer(connection,nom):
-        cursor = connection.cursor()
+    def inserer(conn,nom):
+        cursor = conn.cursor()
         insertion = "INSERT INTO Editeur VALUES ('%s')" % (nom)
         cursor.execute(insertion)
-        connection.commit()
-        connection.close()
+        
+        
 
-    @classmethod
-    def modifier(connection,colonne, valeur, condition):
-        cursor = connection.cursor()
+    def modifier(conn,colonne, valeur, condition):
+        cursor = conn.cursor()
         modification = "UPDATE Editeur SET %s = %s WHERE %s" % (colonne, valeur, condition)
         cursor.execute(modification)
-        connection.commit()
-        connection.close()
+        
+        
 
-    @classmethod
-    def supprimer(connection,condition):
-        cursor = connection.cursor()
+    def supprimer(conn,condition):
+        cursor = conn.cursor()
         suppression = "DELETE FROM Editeur WHERE %s" % (condition)
         cursor.execute(suppression)
-        connection.commit()
-        connection.close()
+        
+        
 
-    @classmethod
-    def afficherTous(connection):
-        cursor = connection.cursor()
-        affichage = "SELECT * FROM Editeur"
-        cursor.execute(affichage)
-        rawdata = cursor.fetchone()
-        while rawdata:
-            print(rawdata[0])
-            rawdata = cursor.fetchone()
-        connection.close()
 
-    @classmethod
-    def afficherParCondition(connection,condition):
-        cursor = connection.cursor()
+    def afficherTous(conn):
+        try:
+         cur = conn.cursor()
+         sql= "SELECT * FROM Editeur"
+         cur.execute(sql)
+
+        except Exception as error:
+         print("Une exception s'est produite : ", error)
+         print("Type d'exception : ", type(error))
+
+        raw= cur.fetchone()
+
+        while raw:
+            print(raw[0])
+            raw = cur.fetchone()
+        
+
+    def afficherParCondition(conn,condition):
+        cursor = conn.cursor()
         affichage = "SELECT * FROM Editeur WHERE %s" % (condition)
         cursor.execute(affichage)
         rawdata = cursor.fetchone()
         while rawdata:
             print(rawdata[0])
             rawdata = cursor.fetchone()
-        connection.close()
+        
 
 choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Questions SQL \n 2 : Afficher des données \n 3 : Modifier la BDD\n 4 : Insérer une donnée\n Autre pour quitter \n"))
 while choix1>0 and choix1<4:
@@ -1014,5 +1002,5 @@ while choix1>0 and choix1<4:
       elif choixA==10:
           Amis.afficherParCondition(conn,1)
          
-  choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Questions SQL \n 2 : Afficher des données \n 3 : Modifier la BDD\n Autre pour quitter \n"))
+  choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Questions SQL \n 2 : Afficher des données \n 3 : Modifier la BDD\n 4 : Insérer une donnée\n Autre pour quitter \n"))
   
