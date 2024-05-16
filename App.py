@@ -23,7 +23,7 @@ class Artiste:
     self.origine=origine
     self.biographie=biographie
 
-  def test_groupe(conn, nom_g):
+  def test_nom_groupe(conn, nom_g):
     try:
       cur=conn.cursor()
       sql= "SELECT G.Id_G FROM Groupe as G JOIN Artiste as A ON G.Id_G=A.Id WHERE A.nom=%s;" % (nom_g)
@@ -55,7 +55,22 @@ class Artiste:
         return True
      else:
         return False
-
+     
+  def test_ID_g(conn, ID)-> int:
+     try:
+      cur=conn.cursor()
+      sql="SELECT Id_g FROM Groupe WHERE Id=%s;" % (ID)
+      cur.execute(sql)
+     except Exception as error:
+       print("Une exception s'est produite : ", error)
+       print("Type d'exception : ", type(error))
+       return False
+     
+     raw=cur.fetchone()
+     if raw:
+        return True
+     else:
+        return False
 
   def insert(self,conn):
     id=str(input("Entrez le numéro d'ID \n"))
@@ -79,7 +94,7 @@ class Artiste:
         nom=str(input("Entrez le nom de l'artiste à ajouter:\n"))
         biographie=str(input("Entrez la biographie de l'artiste \n"))
         nom_g=str(input("Tapez le nom du groupe auquel appartient l'artiste \n"))
-        test_g, id_g=self.test_groupe(conn, nom_g)
+        test_g, id_g=self.test_nom_groupe(conn, nom_g)
         if test_g==False:
            nom_g=str(input("Tapez un nom de groupe différent \n"))
            test_g, id_g=self.test_groupe(conn, nom_g)
@@ -128,6 +143,8 @@ class Artiste:
     return
 
   def afficher(self, conn, ID):
+    test_groupe=self.test_ID_g
+        
     try:
        cur = conn.cursor()
        sql= "SELECT nom,biographie,origine FROM Artiste WHERE id=%s;" %(ID)
@@ -138,13 +155,33 @@ class Artiste:
        print("Type d'exception : ", type(error))
 
     raw= cur.fetchone()
+
+    if test_groupe:
+       print("Type : Groupe \n")
+
+    else:
+       print("Type: Solo \n")
+
     while raw:
-      print("Nom : %s", raw[0])
-      print("Biographie : %s", raw[1])
-      print("Origine : %s", raw[2])
+      print("Nom : %s \n", raw[0])
+      print("Biographie : %s \n", raw[1])
+      print("Origine : %s \n", raw[2])
       raw=cur.fetchone()
 
-    
 
-  
+#DroitsEdition et DroitsArtistiques doivent être dans ajouter Chanson
 
+
+class Interrogation:
+   def Q1(conn):
+      return 0
+   
+   def Q2(conn):
+      return 0
+   
+   def Q3(conn):
+      return 0
+   
+   def Q4(conn):
+      return 0
+      
