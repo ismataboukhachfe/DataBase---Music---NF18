@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu May 16 16:08:02 2024
+
+@author: nf18p030
+"""
+
+
+class ContientAlbum:
+
+    def __init__(self, album, playlist):
+        self.album = album
+        self.playlist = playlist
+
+    @staticmethod
+    def test_ID(conn, table, ID) -> bool:
+        cur = conn.cursor()
+        sql = "SELECT Id FROM %s WHERE Id = %%s" % table
+        cur.execute(sql, (ID,))
+        raw = cur.fetchone()
+        cur.close()
+        return raw is not None
+
+    def insert(self, conn):
+        self.album = input("Album ID : ")
+        while not self.test_ID(conn, "Album", self.album):
+            self.album = input("Album ID : ")
+
+        self.playlist = input("Playlist ID : ")
+        while not self.test_ID(conn, "Playlist", self.playlist):
+            self.playlist = input("Playlist ID : ")
+
+        cur = conn.cursor()
+        sql = """
+        INSERT INTO ContientAlbum (album, playlist) 
+        VALUES (%s, %s)
+        """
+        cur.execute(sql, (self.album, self.playlist))
+        conn.commit()
+        cur.close()
+
+    def modifier(self, conn):
+        old_album = input("Old Album ID : ")
+        old_playlist = input("Old Playlist ID : ")
+        while not self.test_ID(conn, "ContientAlbum", (old_album, old_playlist)):
+            old_album = input("Old Album ID : ")
+            old_playlist = input("Old Playlist ID : ")
+
+        self.album = input("New Album ID : ")
+        while not self.test_ID(conn, "Album", self.album):
+            self.album = input("New Album ID : ")
+
+        self.playlist = input("New Playlist ID : ")
+        while not self.test_ID(conn, "Playlist", self.playlist):
+            self.playlist = input("New Playlist ID : ")
+
+        sql = """
+        UPDATE ContientAlbum 
+        SET album = %s, playlist = %s
+        WHERE album = %s AND playlist = %s
+        """
+        cur = conn.cursor()
+        cur.execute(sql, (self.album, self.playlist, old_album, old_playlist))
+        conn.commit()
+        cur.close()
+
+    def delete(self, conn):
+        album = input("Album ID : ")
+        playlist = input("Playlist ID : ")
+        while not self.test_ID(conn, "ContientAlbum", (album, playlist)):
+            album = input("Album ID : ")
+            playlist = input("Playlist ID : ")
+
+        sql = "DELETE FROM ContientAlbum WHERE album = %s AND playlist = %s"
+        cur = conn.cursor()
+        cur.execute(sql, (album, playlist))
+        conn.commit()
+        cur.close()
+        print(f"Liaison entre l'album '{album}' et la playlist '{playlist}' a été supprimée.")
+
+    @staticmethod
+    def affichage(conn):
+        sql = "SELECT * FROM ContientAlbum"
+        cur = conn.cursor()
+        cur.execute(sql)
+        links = cur.fetchall()
+        cur.close()
+        
+        if links:
+            for link in links:
+                print(f"Album: {link[0]}")
+                print(f"Playlist: {link[1]}")
+                print()
+        else:
+            print("Aucune liaison trouvée.")
