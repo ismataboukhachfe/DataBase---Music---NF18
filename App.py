@@ -1053,6 +1053,11 @@ while choix1>0 and choix1<4:
 
 
   elif choix1==2:
+      f"""Afficher :\n1:Utilisateur\n2:Artiste\n3:Chanson\n4:Album\n
+      5:Editeurs\n6:Genres musicaux\n7:Historique d'un utilisateur\n
+      8:Préférences d'un utilisateur\n9:Playlists d'un utilisateur\n
+      10:Amis d'un utilisateur\n11:Droits d'édition d'une chanson ou d'un éditeur\n
+      12:Droits artistiques d'une chanson ou d'un artiste"""
       choixA=int(input("Afficher :\n1:Utilisateur\n2:Artiste\n3:Chanson\n4:Album\n5:Editeur\n6:Genre musical\n7:Historique d'un utilisateur\n8:Préférences d'un utilisateur\n9:Playlists d'un utilisateur\n10:Amis d'un utilisateur\n"))
 
       if choixA==1:
@@ -1084,6 +1089,29 @@ while choix1>0 and choix1<4:
 
       elif choixA==10:
           Amis.afficherParCondition(conn,1)
+
+      elif choixA==11:
+         choix=int(input("Tapez 1 pour connaitre l'éditeur d'une chanson ou 2 pour les chansons d'un éditeur\n"))
+         if choix==1:
+           id_c=str(input("Donner l'id de la chanson\n"))
+           DroitsEdition.afficherdroit(DroitsEdition, conn, id_c)
+         elif choix==2:
+           nom=str(input("Tapez le nom de l'éditeur\n"))
+           DroitsEdition.afficherliste(DroitsEdition,conn,nom)
+         else:
+           print("Relisez la consigne et recommencez")
+            
+      elif choixA==12:
+         choix=int(input("Tapez 1 pour connaitre l'éditeur d'une chanson ou 2 pour les chansons d'un éditeur\n"))
+         if choix==1:
+           id_c=str(input("Donner l'id de la chanson\n"))
+           DroitsArtistiques.afficherdroit(DroitsArtistiques, conn, id_c)
+         elif choix==2:
+           id_a=str(input("Tapez le nom de l'éditeur\n"))
+           DroitsArtistiques.afficherliste(DroitsArtistiques,conn,id_a)
+         else:
+           print("Relisez la consigne et recommencez")
+            
          
   elif choix1==3:
      f = """Modifier la table : \n1:Utilisateur\n2:Artiste\n3:Chanson\n
@@ -1093,18 +1121,137 @@ while choix1>0 and choix1<4:
   
      print(f)
 
+     choixA=int(input())
+
+     if choixA==1:
+          Utilisateur.modifier(Utilisateur, conn)          
+
+     elif choixA==2: 
+          Artiste.modifier(Artiste,conn)
+
+     elif choixA==3:
+         Chanson.modifier(conn)
+      
+     elif choixA==4:
+         Album.modifier(conn)
+
+     elif choixA==5:
+         Editeur.modifier(conn)
+
+     elif choixA==6:
+         Genre.modifier(Genre, conn)
+
+     elif choixA==7:
+         Historique.modifier(conn,1)
+
+     #elif choixA==8:
+     #   Preferences.modifier(conn)
+
+     #elif choixA==9:
+     #   Playlist.modifier(conn)
+
+     elif choixA==10:
+         Amis.modifier(conn,1) 
+
+     elif choixA==11:
+        0    
+
+     elif choixA==12:
+        0
+
 
   elif choix1==4:
      f = """Insérer une donnée dans la table : \n1:Utilisateur\n2:Artiste\n3:Chanson\n
      4:Album\n5:Editeur\n6:Genre musical\n7:Historique\n
      8:Préférences\n9:Playlists\n10:Amis\n
      11:DroitsEdition\n12:DroitsArtistiques\n"""
-  
+
+     print(f)
+
+     choixA=int(input()) 
+
+     if choixA==1:
+          Utilisateur.ajouter(Utilisateur, conn)          
+
+     elif choixA==2: 
+          Artiste.ajouter(Artiste,conn)
+
+     elif choixA==3:
+         Chanson.insert(conn)
+      
+     elif choixA==4:
+         Album.insert(conn)
+
+     elif choixA==5:
+         Editeur.inserer(conn)
+
+     elif choixA==6:
+         Genre.ajouter(Genre, conn)
+
+     elif choixA==7:
+         Historique.inserer(conn,1)
+
+     #elif choixA==8:
+     #   Preferences.ajouter(conn)
+
+     #elif choixA==9:
+     #   Playlist.ajouter(conn)
+
+     elif choixA==10:
+         Amis.inserer(conn,1) 
+
+     elif choixA==11:
+        0    
+
+     elif choixA==12:
+        0
+
+
   elif choix1==5:
      f = """Supprimer une donnée de la table : \n1:Utilisateur\n2:Artiste\n3:Chanson\n
      4:Album\n5:Editeur\n6:Genre musical\n7:Historique\n
      8:Préférences\n9:Playlists\n10:Amis\n
      11:DroitsEdition\n12:DroitsArtistiques\n"""
+
+     print(f)
+
+     choixA=int(input())
+
+     if choixA==1:
+          Utilisateur.delete(Utilisateur, conn)          
+
+     elif choixA==2: 
+          Artiste.supprimer(Artiste,conn)
+
+     elif choixA==3:
+         Chanson.delete(conn)
+      
+     elif choixA==4:
+         Album.delete(conn)
+
+     elif choixA==5:
+         Editeur.supprimer(conn)
+
+     elif choixA==6:
+         Genre.delete(Genre, conn)
+
+     elif choixA==7:
+         Historique.supprimer(conn,1)
+
+     #elif choixA==8:
+     #   Preferences.delete(conn)
+
+     #elif choixA==9:
+     #   Playlist.delete(conn)
+
+     elif choixA==10:
+         Amis.supprimer(conn,1) 
+
+     elif choixA==11:
+        0
+
+     elif choixA==12:
+        0
 
   choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Questions SQL \n 2 : Afficher des données \n 3 : Modifier la BDD\n 4 : Insérer une donnée\n 5 : Supprimer un élément d'une table\n Autre pour quitter \n"))
   
