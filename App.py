@@ -84,17 +84,21 @@ class Utilisateur :
         cur.close()        
     
     
-    def delete(self, conn, nom):
-        sql = "DELETE FROM utilisateur WHERE nom_utilisateur = '/s " % nom
+    def delete(self, conn):
+        self.nom_utilisateur = str(input("Entrer le nom_utilisateur : "))
+
+        sql = "DELETE FROM utilisateur WHERE nom_utilisateur = '/s " % self.nom_utilisateur
         
         cur = conn.cursor()
         cur.execute(sql)
         conn.commit()
         cur.close()
-        print(f"Utilisateur '{nom}' a été supprimé.")
+        print(f"Utilisateur '{self.nom_utilisateur}' a été supprimé.")
         
-    def affichage(self,conn,nom) : 
-        sql = "SELECT * FROM utilisateur WHERE nom_utilisateur = '%s'" % nom
+    def affichage(self,conn) : 
+        self.nom_utilisateur = str(input("Entrer le nom_utilisateur : "))
+
+        sql = "SELECT * FROM utilisateur WHERE nom_utilisateur = '%s'" % self.nom_utilisateur
     
         cur = conn.cursor()
         cur.execute(sql)
@@ -107,9 +111,62 @@ class Utilisateur :
             print(f"Mot de passe: {user[2]}")
             print(f"Adresse email: {user[3]}")
             print(f"Date d'inscription: {user[4]}")
+            print(f"type: {user[5]}")
         else:
-            print(f"Utilisateur avec le nom '{nom}' non trouvé.")
+            print(f"Utilisateur avec le nom '{self.nom_utilisateur}' non trouvé.")
 
+
+class Genre :
+    
+    def __init__(self,nom) : 
+        self.nom = nom 
+        
+    def test_nom(conn, nom)-> int:
+         cur=conn.cursor()
+         sql="SELECT Id FROM genre WHERE nom =%s" % (nom)
+         cur.execute(sql)
+
+         raw=cur.fetchone()
+         if raw:
+            return True
+         if raw:
+            return False   
+    
+    def ajouter(self,conn) :
+        
+        self.nom = str(input("Entrer le genre que vous voulez ajouter : "))
+        
+        if self.test_nom(self.nom) == True : 
+            print("Impossible car le nom existe deja")
+            return 
+        sql = "INSERT INTO genre VALUES ('%s')" % (self.nom)
+        
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit()
+        conn.close()
+        
+    def affichage(self, conn):
+        sql = "SELECT * FROM genre"
+    
+        cur = conn.cursor()
+        cur.execute(sql)
+        genres = cur.fetchall()  # Fetch all rows
+        for genre in genres:
+            print(genre)
+        cur.close()
+        
+    
+    def delete(self, conn):
+        self.nom = str(input("Entrer le genre que vous voulez ajouter : "))
+
+        sql = "DELETE FROM genre WHERE genre = '/s' " % self.nom
+        
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit()
+        cur.close()
+        print(f"Utilisateur '{self.nom}' a été supprimé.")
 
 choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Questions SQL \n 2 : Afficher des données \n 3 : Modifier la BDD\n Autre pour quitter \n"))
 while choix1>0 and choix1<4:
