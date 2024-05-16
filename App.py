@@ -44,7 +44,7 @@ class Artiste:
   def test_ID(conn, ID)-> int:
      try:
       cur=conn.cursor()
-      sql="SELECT Id FROM Artiste WHERE Id=%s;" % (ID)
+      sql="SELECT Id FROM Artiste WHERE Id='%s';" % (ID)
       cur.execute(sql)
      except Exception as error:
        print("Une exception s'est produite : ", error)
@@ -59,7 +59,7 @@ class Artiste:
   def test_ID_g(conn, ID)-> int:
      try:
       cur=conn.cursor()
-      sql="SELECT Id_g FROM Groupe WHERE Id=%s;" % (ID)
+      sql="SELECT Id_g FROM Groupe WHERE Id_g='%s';" % (ID)
       cur.execute(sql)
      except Exception as error:
        print("Une exception s'est produite : ", error)
@@ -74,6 +74,7 @@ class Artiste:
 
   def insert(self,conn):
     id=str(input("Entrez le numéro d'ID \n"))
+    testID=self.test_ID(id)
     while testID:
          id=str(input("Tapez un ID différent \n"))
          testID=self.test_id(conn,id)
@@ -134,7 +135,7 @@ class Artiste:
     if type==3:
       try:
         cur=conn.cursor()
-        sql= "INSERT INTO Solo VALUES ('%s', %s);" % (id, id_g)
+        sql= "INSERT INTO Solo VALUES ('%s', '%s');" % (id, id_g)
         cur.execute(sql)
       except Exception as error:
        print("Une exception s'est produite : ", error)
@@ -142,12 +143,13 @@ class Artiste:
 
     return
 
-  def afficher(self, conn, ID):
-    test_groupe=self.test_ID_g
+  def afficher(self, conn):
+    ID=str(input("Tapez l'ID de l'artiste \n"))
+    test_groupe=self.test_ID_g(conn,ID)
 
     try:
        cur = conn.cursor()
-       sql= "SELECT id,nom,biographie,origine FROM Artiste WHERE id=%s;" %(ID)
+       sql= "SELECT id,nom,biographie,origine FROM Artiste WHERE id='%s';" %(ID)
        cur.execute(sql)
 
     except Exception as error:
@@ -163,16 +165,17 @@ class Artiste:
        print("Type: Solo \n")
 
     while raw:
-      print("ID : %s \n", raw[0])
-      print("Nom : %s \n", raw[1])
-      print("Biographie : %s \n", raw[2])
-      print("Origine : %s \n", raw[3])
+      print("ID : %s \n"% raw[0])
+      print("Nom : %s \n"% raw[1])
+      print("Biographie : %s \n"% raw[2])
+      print("Origine : %s \n"% raw[3])
       raw=cur.fetchone()
 
 
 
   def modifier(self, conn):
-    test_id=self.test_ID()
+    ID=str(input("Tapez l'ID de l'artiste"))
+    test_id=self.test_ID(ID)
     if test_id==False:
        print("Artiste non trouvé")
 
@@ -333,77 +336,158 @@ class Interrogation:
 
 
 
-class Utilisateur :
-
-    def __init__(self,identifiant,nom_utilisateur, motdepasse,adressemail,dateinscription ):
-
-        self.identifiant = identifiant
-        self.nom_utilisateur = nom_utilisateur
+class Utilisateur : 
+    
+    def __init__(self,identifiant,nom_utilisateur, motdepasse,adressemail,dateinscription,typeu ):
+       
+        self.identifiant = identifiant 
+        self.nom_utilisateur = nom_utilisateur 
         self.motdepasse = motdepasse
-        self.adressemail = adressemail
-        self.dateinscription = dateinscription
+        self.adressemail = adressemail 
+        self.dateinscription = dateinscription 
+        self.typeu = typeu
+        
+    def test_ID(conn, ID)-> int:
+     cur=conn.cursor()
+     sql="SELECT Id FROM Utilisateur WHERE identifiant =%s" % (ID)
+     cur.execute(sql)
 
-
+     raw=cur.fetchone()
+     if raw:
+        return True
+     if raw:
+        return False   
+    
     def ajouter(self,conn) :
-
+        
+        self.identifiant = str(input("Entrer l'identifiant : "))
+        self.nom_utilisateur = str(input("Entrer le nom_utilisateur : "))
+        self.motdepasse = str(input("Entrer le mot de passe : "))
+        self.adressemail = str(input("Entrer l'adressemail: "))
+        self.dateinscription = str(input("Entrer la date user=Utilisateur() d'inscription : "))
+        typeu = int(input("Entrer 1 si premium , 0 si non"))
+        if typeu == 1 : self.typeu = 'premium'
+        if typeu == 0 : self.typeu = 'régulier'
+        
+        if self.test_ID(self.identifiant) == True : 
+            print("Impossible car l'identifiant existe deja, veuillez essayer un autre identifiant")
+            return 
+        
+        sql = "INSERT INTO utilisateur VALUES ('%s', '%s', '%s','%s','%s','%s')" % (self.identifiant, self.nom_utilisateur, self.motdepasse,self.adressemail,self.dateinscription,self.typeu)
+        
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit()
+        conn.close()
+        
+    def modifier(self,conn):
+        
+    
         self.identifiant = str(input("Entrer l'identifiant : "))
         self.nom_utilisateur = str(input("Entrer le nom_utilisateur : "))
         self.motdepasse = str(input("Entrer le mot de passe : "))
         self.adressemail = str(input("Entrer l'adressemail: "))
         self.dateinscription = str(input("Entrer la date d'inscription : "))
-
-        sql = "INSERT INTO utilisateur VALUES ('%s', '%s', '%s','%s','%s')" % (identifiant, nom_utilisateur, motdepasse,adressemail,dateinscription)
-
-        cur = conn.cursor()
-        cur.execute(sql)
-        conn.commit()
-        conn.close()
-
-    def modifier(self,conn,identifiant, nom_utilisateur, motdepasse, adressemail, dateinscription):
-
-        self.identifiant = identifiant
-        self.nom_utilisateur = nom_utilisateur
-        self.motdepasse = motdepasse
-        self.adressemail = adressemail
-        self.dateinscription = dateinscription
-
-
+        typeu = int(input("Entrer 1 si premium , 0 si non"))
+        if typeu == 1 : self.typeu = 'premium'
+        if typeu == 0 : self.typeu = 'régulier'
+    
+    
         sql = """
         UPDATE utilisateur
-        SET nom_utilisateur = '%s', motdepasse = '%s', adressemail = '%s', dateinscription = '%s'
-        WHERE identifiant = '%s'% (nom_utilisateur, motdepasse,adressemail,dateinscription,identifiant)
-        """
+        SET nom_utilisateur = '%s', motdepasse = '%s', adressemail = '%s', dateinscription = '%s, type = '%s' 
+        WHERE identifiant = '%s'  """ % (self.nom_utilisateur, self.motdepasse,self.adressemail,self.dateinscription,self.typeu,self.identifiant) 
+       
+        
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit()
+        cur.close()        
+    
+    
+    def delete(self, conn):
+        self.nom_utilisateur = str(input("Entrer le nom_utilisateur : "))
 
+        sql = "DELETE FROM utilisateur WHERE nom_utilisateur = '/s " % self.nom_utilisateur
+        
         cur = conn.cursor()
         cur.execute(sql)
         conn.commit()
         cur.close()
+        print(f"Utilisateur '{self.nom_utilisateur}' a été supprimé.")
+        
+    def affichage(self,conn) : 
+        self.nom_utilisateur = str(input("Entrer le nom_utilisateur : "))
 
-    def delete(self, conn, nom):
-        sql = "DELETE FROM utilisateur WHERE nom_utilisateur = '%s " % nom
-
-        cur = conn.cursor()
-        cur.execute(sql)
-        conn.commit()
-        cur.close()
-        print(f"Utilisateur '{nom}' a été supprimé.")
-
-    def affichage(self,conn,nom) :
-        sql = "SELECT * FROM utilisateur WHERE nom_utilisateur = '%s'" % nom
-
+        sql = "SELECT * FROM utilisateur WHERE nom_utilisateur = '%s'" % self.nom_utilisateur
+    
         cur = conn.cursor()
         cur.execute(sql)
         user = cur.fetchone()
         cur.close()
-
+    
         if user:
             print(f"Identifiant: {user[0]}")
             print(f"Nom d'utilisateur: {user[1]}")
             print(f"Mot de passe: {user[2]}")
             print(f"Adresse email: {user[3]}")
             print(f"Date d'inscription: {user[4]}")
+            print(f"type: {user[5]}")
         else:
-            print(f"Utilisateur avec le nom '{nom}' non trouvé.")
+            print(f"Utilisateur avec le nom '{self.nom_utilisateur}' non trouvé.")
+
+
+class Genre :
+    
+    def __init__(self,nom) : 
+        self.nom = nom 
+        
+    def test_nom(conn, nom)-> int:
+         cur=conn.cursor()
+         sql="SELECT Id FROM genre WHERE nom =%s" % (nom)
+         cur.execute(sql)
+
+         raw=cur.fetchone()
+         if raw:
+            return True
+         if raw:
+            return False   
+    
+    def ajouter(self,conn) :
+        
+        self.nom = str(input("Entrer le genre que vous voulez ajouter : "))
+        
+        if self.test_nom(self.nom) == True : 
+            print("Impossible car le nom existe deja")
+            return 
+        sql = "INSERT INTO genre VALUES ('%s')" % (self.nom)
+        
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit()
+        conn.close()
+        
+    def affichage(self, conn):
+        sql = "SELECT * FROM genre"
+    
+        cur = conn.cursor()
+        cur.execute(sql)
+        genres = cur.fetchall()  # Fetch all rows
+        for genre in genres:
+            print(genre)
+        cur.close()
+        
+    
+    def delete(self, conn):
+        self.nom = str(input("Entrer le genre que vous voulez ajouter : "))
+
+        sql = "DELETE FROM genre WHERE genre = '/s' " % self.nom
+        
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit()
+        cur.close()
+        print(f"Utilisateur '{self.nom}' a été supprimé.")
 
 
 choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Questions SQL \n 2 : Afficher des données \n 3 : Modifier la BDD\n Autre pour quitter \n"))
@@ -420,10 +504,14 @@ while choix1>0 and choix1<4:
         Interrogation.Q4(conn)
 
 
-  if choix1==2:
-      choixA=int(input("Afficher :\n 1: Utilisateur\n2:Artiste\n3:Chanson\n4:Album\n5:Editeur\n6:Genre musical\n7:Historique d'un utilisateur\n8:Préférences d'un utilisateur\n9:Playlists d'un utilisateur\n10:Amis d'un utilisateur"))
+  elif choix1==2:
+      choixA=int(input("Afficher :\n1: Utilisateur\n2:Artiste\n3:Chanson\n4:Album\n5:Editeur\n6:Genre musical\n7:Historique d'un utilisateur\n8:Préférences d'un utilisateur\n9:Playlists d'un utilisateur\n10:Amis d'un utilisateur\n"))
 
-      if choixA==1: 
-          user=Utilisateur() 
-          nomU=str(input("Tapez le nom de l'utilisateur à afficher")) 
-          Utilisateur.affichage(user,conn, nomU)
+      if choixA==1:
+          Utilisateur.affichage(Utilisateur, conn)          
+
+      elif choixA==2: 
+          Artiste.afficher(Artiste,conn)
+
+  choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Questions SQL \n 2 : Afficher des données \n 3 : Modifier la BDD\n Autre pour quitter \n"))
+  
