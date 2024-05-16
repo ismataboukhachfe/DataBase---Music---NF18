@@ -221,14 +221,68 @@ class Artiste:
 
 class Interrogation:
    def Q1(conn):
-      return 0
+      try:
+        cur = conn.cursor()
+        sql= "SELECT A.nom AS nom_artiste, AVG(C.Durée) AS durée_moyenne FROM Chanson C JOIN Album Ab ON C.Album = Ab.id JOIN Artiste A ON Ab.Artiste = A.id GROUP BY A.nom HAVING COUNT(*) >= 5;"
+        cur.execute(sql)
+
+      except Exception as error:
+        print("Une exception s'est produite : ", error)
+        print("Type d'exception : ", type(error))
+    
+      raw=cur.fetchone()
+      print("Nom   Durée moyenne \n")
+      while raw:
+         print(raw[0], raw[1])
+         raw=cur.fetchone()
+    
    
    def Q2(conn):
-      return 0
+      try:
+        cur = conn.cursor()
+        sql= "SELECT A.nom AS nom_artiste, COUNT(*) AS nombre_de_chansons FROM Chanson C JOIN Album Ab ON C.Album = Ab.id JOIN Artiste A ON Ab.Artiste = A.id GROUP BY A.nom ORDER BY COUNT(*) DESC LIMIT 5;"
+        cur.execute(sql)
+
+      except Exception as error:
+        print("Une exception s'est produite : ", error)
+        print("Type d'exception : ", type(error))
+    
+      raw=cur.fetchone()
+      print("Nom   Nombre de chansons \n")
+      while raw:
+         print(raw[0], raw[1])
+         raw=cur.fetchone()
+    
    
    def Q3(conn):
-      return 0
+      try:
+        cur = conn.cursor()
+        sql= "SELECT A.nom AS nom_artiste FROM Chanson C JOIN Album Ab ON C.Album = Ab.id JOIN Artiste A ON Ab.Artiste = A.id GROUP BY A.nom WHERE C.Durée > (TIME '00:05:00') ;"
+        cur.execute(sql)
+
+      except Exception as error:
+        print("Une exception s'est produite : ", error)
+        print("Type d'exception : ", type(error))
+    
+      raw=cur.fetchone()
+      print("Nom de l'artiste  Durée de la chanson \n")
+      while raw:
+         print(raw[0], raw[1])
+         raw=cur.fetchone()
    
    def Q4(conn):
-      return 0
+      try:
+        cur = conn.cursor()
+        sql= "SELECT P.genre, COUNT(P.genre) FROM Preferences P GROUP BY P.genre ORDER BY COUNT(P.genre) DESC;"
+        cur.execute(sql)
+
+      except Exception as error:
+        print("Une exception s'est produite : ", error)
+        print("Type d'exception : ", type(error))
+    
+      raw=cur.fetchone()
+      print("Nom de l'artiste  Durée de la chanson \n")
+      while raw:
+         print(raw[0], raw[1])
+         raw=cur.fetchone()
       
