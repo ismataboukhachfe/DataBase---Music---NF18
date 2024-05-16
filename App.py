@@ -15,7 +15,7 @@ except Exception as error:
 	print("Une exception s'est produite : ", error)
 	print("Type d'exception : ", type(error))
 
-  class Utilisateur : 
+class Utilisateur : 
     
     def __init__(self,identifiant,nom_utilisateur, motdepasse,adressemail,dateinscription ):
        
@@ -41,7 +41,7 @@ except Exception as error:
         conn.commit()
         conn.close()
         
-def modifier(self,conn,identifiant, nom_utilisateur, motdepasse, adressemail, dateinscription):
+    def modifier(self,conn,identifiant, nom_utilisateur, motdepasse, adressemail, dateinscription):
     
         self.identifiant = identifiant 
         self.nom_utilisateur = nom_utilisateur 
