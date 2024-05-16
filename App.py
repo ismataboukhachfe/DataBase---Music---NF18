@@ -47,8 +47,7 @@ class Artiste:
       cur.execute(sql)
      except Exception as error:
        print("Une exception s'est produite : ", error)
-       print("Type d'exception : ", type(error))
-       return True
+       print("Type d'exception : ", type(error))  #gestion exception à revoir
 
      raw=cur.fetchone()
      if raw:
@@ -168,8 +167,56 @@ class Artiste:
       print("Origine : %s \n", raw[2])
       raw=cur.fetchone()
 
+  def modifier(self, conn, ID):
+    test_id=self.test_ID()
+    if test_id==False:
+       print("Artiste non trouvé")
+    
+    if test_id:
+       print("Que voulez-vous modifier? \n")
+       choix=int(input("Tapez 1 pour le nom, 2 pour la biographie, 3 pour l'origine, 0 pour quitter \n"))
 
-#DroitsEdition et DroitsArtistiques doivent être dans ajouter Chanson
+       if choix==0:
+          return 0
+       if choix==1:
+          nom=str(input("Tapez le nouveau nom : \n"))
+          try:
+            cur = conn.cursor()
+            sql= "SELECT nom,biographie,origine FROM Artiste WHERE id=%s;" %(ID)  #à changer
+            cur.execute(sql)
+
+          except Exception as error:
+            print("Une exception s'est produite : ", error)
+            print("Type d'exception : ", type(error))
+       
+       if choix==2:
+          biographie=str(input("Tapez le nouveau nom : \n"))
+          try:
+            cur = conn.cursor()
+            sql= "SELECT nom,biographie,origine FROM Artiste WHERE id=%s;" %(ID)  #à changer
+            cur.execute(sql)
+
+          except Exception as error:
+            print("Une exception s'est produite : ", error)
+            print("Type d'exception : ", type(error))
+          
+       if choix==3:
+          origine=str(input("Tapez le nouveau nom : \n"))
+          try:
+            cur = conn.cursor()
+            sql= "SELECT nom,biographie,origine FROM Artiste WHERE id=%s;" %(ID)  #à changer
+            cur.execute(sql)
+
+          except Exception as error:
+            print("Une exception s'est produite : ", error)
+            print("Type d'exception : ", type(error))
+
+  
+
+
+
+
+#DroitsEdition.ajouter et DroitsArtistiques.ajouter doivent être dans Chanson.ajouter 
 
 
 class Interrogation:
