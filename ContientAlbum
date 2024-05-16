@@ -13,7 +13,6 @@ class ContientAlbum:
         self.album = album
         self.playlist = playlist
 
-    @staticmethod
     def test_ID(conn, table, ID) -> bool:
         cur = conn.cursor()
         sql = "SELECT Id FROM %s WHERE Id = %%s" % table
@@ -79,7 +78,6 @@ class ContientAlbum:
         cur.close()
         print(f"Liaison entre l'album '{album}' et la playlist '{playlist}' a été supprimée.")
 
-    @staticmethod
     def affichage(conn):
         sql = "SELECT * FROM ContientAlbum"
         cur = conn.cursor()
