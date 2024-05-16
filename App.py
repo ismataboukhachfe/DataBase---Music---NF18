@@ -410,4 +410,11 @@ choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Question
 while choix1>0 and choix1<4:
 	if choix1==1:
 		choixQ=int(input("Tapez le numéro correspondant à votre choix:\n 1 : Q1\n 2 : Q2\n 3 : Q3\n 4 : Q4\n"))
-		
+		if choixQ==1:
+			Interrogation.Q1(conn)
+		if choixQ==2:
+			Interrogation.Q2(conn)
+		if choixQ==3:
+			Interrogation.Q3(conn)
+		if choixQ==4:
+			Interrogation.Q4(conn)
