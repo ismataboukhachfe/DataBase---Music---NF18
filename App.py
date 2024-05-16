@@ -296,7 +296,13 @@ class Interrogation:
    def Q3(conn):
       try:
         cur = conn.cursor()
-        sql= "SELECT A.nom AS nom_artiste FROM Chanson C JOIN Album Ab ON C.Album = Ab.id JOIN Artiste A ON Ab.Artiste = A.id GROUP BY A.nom WHERE C.Durée > (TIME '00:05:00') ;"
+        sql=  '''SELECT A.nom AS nom_artiste
+	FROM Chanson C
+	JOIN Album Ab ON C.Album = Ab.id
+	JOIN Artiste A ON Ab.Artiste = A.id
+	WHERE C.Durée > INTERVAL '5' MINUTE
+	GROUP BY A.nom;'''
+
         cur.execute(sql)
 
       except Exception as error:
