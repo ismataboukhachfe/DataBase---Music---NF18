@@ -453,7 +453,7 @@ class Utilisateur :
         
     def test_ID(conn, ID)-> int:
      cur=conn.cursor()
-     sql="SELECT Id FROM Utilisateur WHERE identifiant =%s" % (ID)
+     sql="SELECT identifiant FROM Utilisateur WHERE identifiant =%s" % (ID)
      cur.execute(sql)
 
      raw=cur.fetchone()
@@ -468,12 +468,12 @@ class Utilisateur :
         self.nom_utilisateur = str(input("Entrer le nom_utilisateur : "))
         self.motdepasse = str(input("Entrer le mot de passe : "))
         self.adressemail = str(input("Entrer l'adressemail: "))
-        self.dateinscription = str(input("Entrer la date user=Utilisateur() d'inscription : "))
+        self.dateinscription = str(input("Entrer la date d'inscription : "))
         typeu = int(input("Entrer 1 si premium , 0 si non"))
         if typeu == 1 : self.typeu = 'premium'
         if typeu == 0 : self.typeu = 'régulier'
         
-        if self.test_ID(self.identifiant) == True : 
+        if self.test_ID(conn,self.identifiant) == True : 
             print("Impossible car l'identifiant existe deja, veuillez essayer un autre identifiant")
             return 
         
@@ -481,8 +481,8 @@ class Utilisateur :
         
         cur = conn.cursor()
         cur.execute(sql)
-        
-        
+        conn.commit()
+        conn.close()
         
     def modifier(self,conn):
         
@@ -495,7 +495,11 @@ class Utilisateur :
         typeu = int(input("Entrer 1 si premium , 0 si non"))
         if typeu == 1 : self.typeu = 'premium'
         if typeu == 0 : self.typeu = 'régulier'
-    
+        
+        if self.test_ID(conn,self.identifiant) == False : 
+                print("Impossible car l'identifiant n'existe pas")
+                return 
+        
     
         sql = """
         UPDATE utilisateur
@@ -505,23 +509,25 @@ class Utilisateur :
         
         cur = conn.cursor()
         cur.execute(sql)
-        
+        conn.commit()
         cur.close()        
     
     
     def delete(self, conn):
+        
         self.nom_utilisateur = str(input("Entrer le nom_utilisateur : "))
 
-        sql = "DELETE FROM utilisateur WHERE nom_utilisateur = '/s " % self.nom_utilisateur
+        sql = "DELETE FROM utilisateur WHERE nom_utilisateur = '%s' " % self.nom_utilisateur
         
         cur = conn.cursor()
         cur.execute(sql)
-        
+        conn.commit()
         cur.close()
         print(f"Utilisateur '{self.nom_utilisateur}' a été supprimé.")
         
     def affichage(self,conn) : 
         self.nom_utilisateur = str(input("Entrer le nom_utilisateur : "))
+
 
         sql = "SELECT * FROM utilisateur WHERE nom_utilisateur = '%s'" % self.nom_utilisateur
     
@@ -561,17 +567,21 @@ class Genre :
         
         self.nom = str(input("Entrer le genre que vous voulez ajouter : "))
         
-        if self.test_nom(self.nom) == True : 
+        if self.test_nom(conn,self.nom) == True : 
             print("Impossible car le nom existe deja")
             return 
         sql = "INSERT INTO genre VALUES ('%s')" % (self.nom)
         
         cur = conn.cursor()
         cur.execute(sql)
-        
-        
+        conn.commit()
+        conn.close()
         
     def affichage(self, conn):
+        if self.test_nom(conn,self.nom) == False : 
+            print("Impossible car le nom n'existe pas")
+            return 
+
         sql = "SELECT * FROM genre"
     
         cur = conn.cursor()
@@ -583,98 +593,185 @@ class Genre :
         
     
     def delete(self, conn):
+        if self.test_nom(conn,self.nom) == False : 
+            print("Impossible car le nom n'existe pas ")
+            return 
+        
         self.nom = str(input("Entrer le genre que vous voulez ajouter : "))
-
-        sql = "DELETE FROM genre WHERE genre = '/s' " % self.nom
+        
+        sql = "DELETE FROM genre WHERE genre = '%s' " % self.nom
         
         cur = conn.cursor()
         cur.execute(sql)
-        
+        conn.commit()
         cur.close()
         print(f"Utilisateur '{self.nom}' a été supprimé.")
 
-class Album:
 
-    def __init__(self, id, titre, sortie, artiste):
-        self.id = id
-        self.titre = titre
-        self.sortie = sortie
-        self.artiste = artiste
+class Preferences : 
+    
+    def __init__(self,utilisateur,genre) : 
+        self.utilisateur = utilisateur 
+        self.genre = genre 
+    
+    def test_nom(conn, nom,genre)-> int:
+         cur=conn.cursor()
+         sql="SELECT Id FROM preferences WHERE utilisateur =%s and genre = %s " % (nom,genre)
+         cur.execute(sql)
+
+         raw=cur.fetchone()
+         if raw:
+            return True
+         if raw:
+            return False   
 
     
-    def test_ID(conn, ID) -> bool:
-        cur = conn.cursor()
-        sql = "SELECT Id FROM Artiste WHERE Id = %s"
-        cur.execute(sql, (ID,))
-        raw = cur.fetchone()
-        cur.close()
-        return raw is not None
-
-    def insert(self, conn):
-        self.id = input("Id : ")
-        while self.test_ID(conn, self.id):
-            self.id = input("Id : ")
-
-        self.titre = input("Titre : ")
-        self.sortie = input("Sortie (YYYY-MM-DD) : ")
-        self.artiste = input("Artiste : ")
-
-        cur = conn.cursor()
-        sql = """
-        INSERT INTO Album (Id, Titre, Sortie, Artiste) 
-        VALUES (%s, %s, %s, %s)
-        """
-        cur.execute(sql, (self.id, self.titre, self.sortie, self.artiste))
+    def ajouter(self,conn) :
         
-        cur.close()
-
-    def modifier(self, conn):
-        id = input("Id : ")
-        while not self.test_ID(conn, id):
-            id = input("Id : ")
-
-        self.titre = input("Titre : ")
-        self.sortie = input("Sortie (YYYY-MM-DD) : ")
-        self.artiste = input("Artiste : ")
-
-        sql = """
-        UPDATE Album 
-        SET Titre = %s, Sortie = %s, Artiste = %s 
-        WHERE Id = %s
-        """
-        cur = conn.cursor()
-        cur.execute(sql, (self.titre, self.sortie, self.artiste, id))
+        if self.test_nom(conn,self.utilisateur,self.genre) == True : 
+            print("La relation existe deja")
+            return 
         
-        cur.close()
-
-    def delete(self, conn):
-        id = input("Id : ")
-        while not self.test_ID(conn, id):
-            id = input("Id : ")
-
-        sql = "DELETE FROM Album WHERE Id = %s"
-        cur = conn.cursor()
-        cur.execute(sql, (id,))
-        
-        cur.close()
-        print(f"Album '{id}' a été supprimé.")
-
-    def affichage(conn):
-        sql = "SELECT * FROM Album"
+        self.utilisateur = str(input("Entrer l'identifiant de l'utilisateur : ")) 
+        self.genre = str(input("Entrer le genre : "))
+        sql = "INSERT INTO utilisateur VALUES ('%s', '%s')" % (self.utilisateur, self.genre)
         cur = conn.cursor()
         cur.execute(sql)
-        albums = cur.fetchall()
+        conn.commit()
+        conn.close()
+
+    def delete(self, conn):
+        if self.test_nom(conn,self.utilisateur,self.genre) == False : 
+            print("La relation n'existe pas")
+            return 
+
+        self.utilisateur = str(input("Entrer l'identifiant de l'utilisateur : ")) 
+        self.genre = str(input("Entrer le genre : "))
+        sql = "DELETE FROM preferences WHERE utilisateur = '%s' and genre = '%s' " % (self.utilisateur,self.genre)
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit()
+        cur.close()
+        print(f"La relation '{self.utilisateur}' et '{self.genre}'  a été supprimé.")
+        
+    def affichage(self, conn):
+        self.utilisateur = str(input("Entrer l'identifiant de l'utilisateur : ")) 
+        if self.test_nom(conn,self.utilisateur,self.genre) == False : 
+            print("La relation n'existe pas")
+            return 
+        sql = "SELECT * FROM preferences where utilisateur = '%s'  " %(self.utilisateur)
+    
+        cur = conn.cursor()
+        cur.execute(sql)
+        preferences = cur.fetchall()  # Fetch all rows
+        for preference in preferences:
+            print(preference[0],preference[1])
+            print()
+        cur.close()
+
+
+class Playlist : 
+    
+    
+    def __init__(self,identifiant,titre,description,autorisation,utilisateur) : 
+        self.identifiant = identifiant 
+        self.titre = titre
+        self.description = description
+        self.autorisation = autorisation 
+        self.utilisateur = utilisateur 
+    
+    def test_Playlist(conn, playlist)-> int:
+        cur=conn.cursor()
+        sql="SELECT * FROM playlist WHERE identifiant =%s" % (playlist)
+        cur.execute(sql)
+        raw=cur.fetchone()
+     
+        if raw:
+            return True
+        if raw:
+            return False   
+        
+    def ajouter(self,conn) :
+
+        self.identifiant = str(input("Entrer l'identifiant du playlist : ")) 
+        self.titre = str(input("Entrer le titre du playlist : "))
+        self.description = str(input("Entrer la description du playlist : "))
+        self.autorisation = str(input("Entrer l'autorisation du playlist : ")) 
+        self.utilisateur = str(input("Entrer le nom de l'utilisateur createur playlist : "))
+        
+        if self.test_Playlist(conn,self.identifiant) == True : 
+            print("Impossible car l'identifiant existe deja, veuillez essayer un autre identifiant")
+            return 
+        
+        sql = "INSERT INTO utilisateur VALUES ('%s', '%s', '%s','%s','%s')" % (self.identifiant, self.titre, self.description,self.autorisation,self.utilisateur)
+        
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit()
+        conn.close()
+        
+    def modifier(self,conn):
+        
+    
+        self.identifiant = str(input("Entrer l'identifiant du playlist : ")) 
+        self.titre = str(input("Entrer le titre du playlist : "))
+        self.description = str(input("Entrer la description du playlist : "))
+        self.autorisation = str(input("Entrer l'autorisation du playlist : ")) 
+        self.utilisateur = str(input("Entrer le nom de l'utilisateur createur playlist : "))
+       
+        if self.test_Playlist(conn,self.identifiant) == False : 
+            print("le playlist n'existe pas")
+            return 
+
+    
+        sql =  """
+        UPDATE playlist
+        SET  titre = '%s',description = '%s', autorisation = '%s', utilisateur = '%s'
+        WHERE identifiant = '%s'  """ % (self.titre, self.description,self.autorisation,self.utilisateur,self.identifiant) 
+       
+        
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit()
+        cur.close()        
+
+    def delete(self, conn):
+        self.identifiant = str(input("Entrer l'identifiant' : "))
+        if self.test_Playlist(conn, self.identifiant) == False : 
+            print("Le playlist n'existe pas")
+            return 
+
+        sql = "DELETE FROM playlist WHERE identifiant = '%s' " % self.identifiant
+        
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit()
+        cur.close()
+        print(f"Playlist '{self.identifiant}' a été supprimé.")
+        print()
+
+    def affichage(self, conn):
+        self.identifiant = str(input("Entrer l'identifiant : "))
+        
+        sql = "SELECT * FROM playlist WHERE identifiant = '%s'" % self.identifiant
+    
+        cur = conn.cursor()
+        cur.execute(sql)
+        user = cur.fetchone()
         cur.close()
         
-        if albums:
-            for album in albums:
-                print(f"Id: {album[0]}")
-                print(f"Titre: {album[1]}")
-                print(f"Sortie: {album[2]}")
-                print(f"Artiste: {album[3]}")
-                print()
+        if self.test_Playlist(conn,self.identifiant) == False : 
+            print("La playlist n'existe pas")
+            return 
+
+        if user:
+            print(f"Identifiant: {user[0]}")
+            print(f"Titre: {user[1]}")
+            print(f"Description : {user[2]}")
+            print(f"Autorisation: {user[3]}")
+            print(f"Utlisateur: {user[4]}")
         else:
-            print("Aucun album trouvé.")
+            print(f"Playlist avec l'identifiant '{self.identifiant}' non trouvé.")
 
 class Chanson:
 
@@ -770,14 +867,93 @@ class Chanson:
         else:
             print(f"Chanson avec le nom '{song}' non trouvé.")
         
+class Album:
 
+    def __init__(self, id, titre, sortie, artiste):
+        self.id = id
+        self.titre = titre
+        self.sortie = sortie
+        self.artiste = artiste
+
+    def test_ID(conn, ID) -> bool:
+        cur = conn.cursor()
+        sql = "SELECT Id FROM Artiste WHERE Id = %s"
+        cur.execute(sql, (ID,))
+        raw = cur.fetchone()
+        cur.close()
+        return raw is not None
+
+    def insert(self, conn):
+        self.id = input("Id : ")
+        while self.test_ID(conn, self.id):
+            self.id = input("Id : ")
+
+        self.titre = input("Titre : ")
+        self.sortie = input("Sortie (YYYY-MM-DD) : ")
+        self.artiste = input("Artiste : ")
+
+        cur = conn.cursor()
+        sql = """
+        INSERT INTO Album (Id, Titre, Sortie, Artiste) 
+        VALUES (%s, %s, %s, %s)
+        """
+        cur.execute(sql, (self.id, self.titre, self.sortie, self.artiste))
+        conn.commit()
+        cur.close()
+
+    def modifier(self, conn):
+        id = input("Id : ")
+        while not self.test_ID(conn, id):
+            id = input("Id : ")
+
+        self.titre = input("Titre : ")
+        self.sortie = input("Sortie (YYYY-MM-DD) : ")
+        self.artiste = input("Artiste : ")
+
+        sql = """
+        UPDATE Album 
+        SET Titre = %s, Sortie = %s, Artiste = %s 
+        WHERE Id = %s
+        """
+        cur = conn.cursor()
+        cur.execute(sql, (self.titre, self.sortie, self.artiste, id))
+        conn.commit()
+        cur.close()
+
+    def delete(self, conn):
+        id = input("Id : ")
+        while not self.test_ID(conn, id):
+            id = input("Id : ")
+
+        sql = "DELETE FROM Album WHERE Id = %s"
+        cur = conn.cursor()
+        cur.execute(sql, (id,))
+        conn.commit()
+        cur.close()
+        print(f"Album '{id}' a été supprimé.")
+
+    def affichage(conn):
+        sql = "SELECT * FROM Album"
+        cur = conn.cursor()
+        cur.execute(sql)
+        albums = cur.fetchall()
+        cur.close()
+        
+        if albums:
+            for album in albums:
+                print(f"Id: {album[0]}")
+                print(f"Titre: {album[1]}")
+                print(f"Sortie: {album[2]}")
+                print(f"Artiste: {album[3]}")
+                print()
+        else:
+            print("Aucun album trouvé.")
 class ContientAlbum:
 
     def __init__(self, album, playlist):
         self.album = album
         self.playlist = playlist
 
-    
     def test_ID(conn, table, ID) -> bool:
         cur = conn.cursor()
         sql = "SELECT Id FROM %s WHERE Id = %%s" % table
@@ -801,8 +977,62 @@ class ContientAlbum:
         VALUES (%s, %s)
         """
         cur.execute(sql, (self.album, self.playlist))
-        
+        conn.commit()
         cur.close()
+
+    def modifier(self, conn):
+        old_album = input("Old Album ID : ")
+        old_playlist = input("Old Playlist ID : ")
+        while not self.test_ID(conn, "ContientAlbum", (old_album, old_playlist)):
+            old_album = input("Old Album ID : ")
+            old_playlist = input("Old Playlist ID : ")
+
+        self.album = input("New Album ID : ")
+        while not self.test_ID(conn, "Album", self.album):
+            self.album = input("New Album ID : ")
+
+        self.playlist = input("New Playlist ID : ")
+        while not self.test_ID(conn, "Playlist", self.playlist):
+            self.playlist = input("New Playlist ID : ")
+
+        sql = """
+        UPDATE ContientAlbum 
+        SET album = %s, playlist = %s
+        WHERE album = %s AND playlist = %s
+        """
+        cur = conn.cursor()
+        cur.execute(sql, (self.album, self.playlist, old_album, old_playlist))
+        conn.commit()
+        cur.close()
+
+    def delete(self, conn):
+        album = input("Album ID : ")
+        playlist = input("Playlist ID : ")
+        while not self.test_ID(conn, "ContientAlbum", (album, playlist)):
+            album = input("Album ID : ")
+            playlist = input("Playlist ID : ")
+
+        sql = "DELETE FROM ContientAlbum WHERE album = %s AND playlist = %s"
+        cur = conn.cursor()
+        cur.execute(sql, (album, playlist))
+        conn.commit()
+        cur.close()
+        print(f"Liaison entre l'album '{album}' et la playlist '{playlist}' a été supprimée.")
+
+    def affichage(conn):
+        sql = "SELECT * FROM ContientAlbum"
+        cur = conn.cursor()
+        cur.execute(sql)
+        links = cur.fetchall()
+        cur.close()
+        
+        if links:
+            for link in links:
+                print(f"Album: {link[0]}")
+                print(f"Playlist: {link[1]}")
+                print()
+        else:
+            print("Aucune liaison trouvée.")
 
     def modifier(self, conn):
         old_album = input("Old Album ID : ")
