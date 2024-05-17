@@ -27,7 +27,7 @@ class Artiste:
   def test_nom_groupe(conn, nom_g):
     try:
       cur=conn.cursor()
-      sql= "SELECT G.Id_G FROM Groupe as G JOIN Artiste as A ON G.Id_G=A.Id WHERE A.nom=%s;" % (nom_g)
+      sql= "SELECT G.Id_G FROM Groupe as G JOIN Artiste as A ON G.Id_G=A.Id WHERE A.nom='%s';" % (nom_g)
       cur.execute(sql)
     except Exception as error:
        print("Une exception s'est produite : ", error)
@@ -107,7 +107,7 @@ class Artiste:
 
     try:
       cur=conn.cursor()
-      sql = "INSERT INTO Artiste VALUES (%d, %s, %s, %s);" % (id, nom, biographie, origine)
+      sql = "INSERT INTO Artiste VALUES ('%s', '%s', '%s', '%s');" % (id, nom, biographie, origine)
       cur.execute(sql)
 
     except Exception as error:
@@ -210,7 +210,7 @@ class Artiste:
           nom=str(input("Tapez le nouveau nom : \n"))
           try:
             cur = conn.cursor()
-            sql= "UPDATE Artiste SET Artiste.nom=%s WHERE Artiste.id=%s;" %(nom, ID)
+            sql= "UPDATE Artiste SET Artiste.nom='%s' WHERE Artiste.id='%s';" %(nom, ID)
             cur.execute(sql)
 
           except Exception as error:
@@ -221,7 +221,7 @@ class Artiste:
           biographie=str(input("Tapez le nouveau nom : \n"))
           try:
             cur = conn.cursor()
-            sql= "UPDATE Artiste SET Artiste.biographie=%s WHERE Artiste.id=%s;" %(biographie, ID)
+            sql= "UPDATE Artiste SET Artiste.biographie='%s' WHERE Artiste.id='%s';" %(biographie, ID)
             cur.execute(sql)
 
           except Exception as error:
@@ -232,7 +232,7 @@ class Artiste:
           origine=str(input("Tapez le nouveau nom : \n"))
           try:
             cur = conn.cursor()
-            sql= "UPDATE Artiste SET Artiste.origine=%s WHERE Artiste.id=%s;" %(origine, ID)
+            sql= "UPDATE Artiste SET Artiste.origine='%s' WHERE Artiste.id='%s';" %(origine, ID)
             cur.execute(sql)
 
           except Exception as error:
@@ -249,7 +249,7 @@ class Artiste:
        if test_id_g:
           try:
             cur = conn.cursor()
-            sql= "DELETE FROM Groupe WHERE Groupe.id_g=%s;" %(ID)
+            sql= "DELETE FROM Groupe WHERE Groupe.id_g='%s';" %(ID)
             cur.execute(sql)
 
           except Exception as error:
@@ -259,7 +259,7 @@ class Artiste:
        else:
           try:
             cur = conn.cursor()
-            sql= "DELETE FROM Solo WHERE Solo.id_S=%s;" %(ID)
+            sql= "DELETE FROM Solo WHERE Solo.id_S='%s';" %(ID)
             cur.execute(sql)
 
           except Exception as error:
@@ -268,7 +268,7 @@ class Artiste:
 
        try:
             cur = conn.cursor()
-            sql= "DELETE FROM Artiste WHERE Artiste.id=%s;" %(ID)
+            sql= "DELETE FROM Artiste WHERE Artiste.id='%s';" %(ID)
             cur.execute(sql)
 
        except Exception as error:
@@ -281,7 +281,7 @@ class DroitsEdition:
    def ajouter(self, conn, ID_chanson, nom_e):
       try:
         cur=conn.cursor()
-        sql = "INSERT INTO DroitsEdition VALUES (%s , '%s');" % (nom_e, ID_chanson)
+        sql = "INSERT INTO DroitsEdition VALUES ('%s' , '%s');" % (nom_e, ID_chanson)
         cur.execute(sql)
 
       except Exception as error:
@@ -291,7 +291,7 @@ class DroitsEdition:
    def afficherdroit(self,conn, id_c):
       try:
          cur=conn.cursor()
-         sql =" SELECT id_c, nom_e FROM DroitsEdition WHERE id_c='%s'"%(id_c)
+         sql =" SELECT id_c, nom_e FROM DroitsEdition WHERE id_c='%s';"%(id_c)
          cur.execute(sql)
 
       except Exception as error:
@@ -307,7 +307,7 @@ class DroitsEdition:
    def afficherliste(self,conn,nom_e):
       try:
          cur=conn.cursor()
-         sql =" SELECT id_c, nom_e FROM DroitsEdition WHERE nom_e='%s'"%(nom_e)
+         sql =" SELECT id_c, nom_e FROM DroitsEdition WHERE nom_e='%s';"%(nom_e)
          cur.execute(sql)
 
       except Exception as error:
@@ -323,7 +323,7 @@ class DroitsArtistiques:
    def ajouter(self,conn,ID_chanson, ID_Artiste, type):
       try:
         cur=conn.cursor()
-        sql = "INSERT INTO DroitsArtistiques VALUES ('%s' , '%s', %s);" % (ID_chanson,ID_Artiste, type)
+        sql = "INSERT INTO DroitsArtistiques VALUES ('%s' , '%s', '%s');" % (ID_chanson,ID_Artiste, type)
         cur.execute(sql)
 
       except Exception as error:
@@ -333,7 +333,7 @@ class DroitsArtistiques:
    def afficherdroit(self,conn, id_c):
       try:
          cur=conn.cursor()
-         sql =" SELECT id_c, id_a, type FROM DroitsArtistiques WHERE id_c='%s'"%(id_c)
+         sql =" SELECT id_c, id_a, type FROM DroitsArtistiques WHERE id_c='%s';"%(id_c)
          cur.execute(sql)
 
       except Exception as error:
@@ -350,7 +350,7 @@ class DroitsArtistiques:
    def afficherliste(self,conn,id_a):
       try:
          cur=conn.cursor()
-         sql =" SELECT id_c, id_a, type FROM DroitsArtistiques WHERE id_a='%s'"%(id_a)
+         sql =" SELECT id_c, id_a, type FROM DroitsArtistiques WHERE id_a='%s';"%(id_a)
          cur.execute(sql)
 
       except Exception as error:
@@ -453,7 +453,7 @@ class Utilisateur :
         
     def test_ID(conn, ID)-> int:
      cur=conn.cursor()
-     sql="SELECT identifiant FROM Utilisateur WHERE identifiant =%s" % (ID)
+     sql="SELECT identifiant FROM Utilisateur WHERE identifiant ='%s';" % (ID)
      cur.execute(sql)
 
      raw=cur.fetchone()
@@ -477,12 +477,12 @@ class Utilisateur :
             print("Impossible car l'identifiant existe deja, veuillez essayer un autre identifiant")
             return 
         
-        sql = "INSERT INTO utilisateur VALUES ('%s', '%s', '%s','%s','%s','%s')" % (self.identifiant, self.nom_utilisateur, self.motdepasse,self.adressemail,self.dateinscription,self.typeu)
+        sql = "INSERT INTO utilisateur VALUES ('%s', '%s', '%s','%s','%s','%s');" % (self.identifiant, self.nom_utilisateur, self.motdepasse,self.adressemail,self.dateinscription,self.typeu)
         
         cur = conn.cursor()
         cur.execute(sql)
         conn.commit()
-        conn.close()
+        
         
     def modifier(self,conn):
         
@@ -503,38 +503,38 @@ class Utilisateur :
     
         sql = """
         UPDATE utilisateur
-        SET nom_utilisateur = '%s', motdepasse = '%s', adressemail = '%s', dateinscription = '%s, type = '%s' 
-        WHERE identifiant = '%s'  """ % (self.nom_utilisateur, self.motdepasse,self.adressemail,self.dateinscription,self.typeu,self.identifiant) 
+        SET nom_utilisateur = '%s', motdepasse = '%s', adressemail = '%s', dateinscription = '%s', type = '%s' 
+        WHERE identifiant = '%s';  """ % (self.nom_utilisateur, self.motdepasse,self.adressemail,self.dateinscription,self.typeu,self.identifiant) 
        
         
         cur = conn.cursor()
         cur.execute(sql)
         conn.commit()
-        cur.close()        
+                
     
     
     def delete(self, conn):
         
         self.nom_utilisateur = str(input("Entrer le nom_utilisateur : "))
 
-        sql = "DELETE FROM utilisateur WHERE nom_utilisateur = '%s' " % self.nom_utilisateur
+        sql = "DELETE FROM utilisateur WHERE nom_utilisateur = '%s'; " % self.nom_utilisateur
         
         cur = conn.cursor()
         cur.execute(sql)
         conn.commit()
-        cur.close()
+        
         print(f"Utilisateur '{self.nom_utilisateur}' a été supprimé.")
         
     def affichage(self,conn) : 
         self.nom_utilisateur = str(input("Entrer le nom_utilisateur : "))
 
 
-        sql = "SELECT * FROM utilisateur WHERE nom_utilisateur = '%s'" % self.nom_utilisateur
+        sql = "SELECT * FROM utilisateur WHERE nom_utilisateur = '%s';" % self.nom_utilisateur
     
         cur = conn.cursor()
         cur.execute(sql)
         user = cur.fetchone()
-        cur.close()
+        
     
         if user:
             print(f"Identifiant: {user[0]}")
@@ -554,7 +554,7 @@ class Genre :
         
     def test_nom(conn, nom)-> int:
          cur=conn.cursor()
-         sql="SELECT Id FROM genre WHERE nom =%s" % (nom)
+         sql="SELECT Id FROM genre WHERE nom ='%s';" % (nom)
          cur.execute(sql)
 
          raw=cur.fetchone()
@@ -570,7 +570,7 @@ class Genre :
         if self.test_nom(conn,self.nom) == True : 
             print("Impossible car le nom existe deja")
             return 
-        sql = "INSERT INTO genre VALUES ('%s')" % (self.nom)
+        sql = "INSERT INTO genre VALUES ('%s');" % (self.nom)
         
         cur = conn.cursor()
         cur.execute(sql)
@@ -582,7 +582,7 @@ class Genre :
             print("Impossible car le nom n'existe pas")
             return 
 
-        sql = "SELECT * FROM genre"
+        sql = "SELECT * FROM genre;"
     
         cur = conn.cursor()
         cur.execute(sql)
@@ -599,7 +599,7 @@ class Genre :
         
         self.nom = str(input("Entrer le genre que vous voulez ajouter : "))
         
-        sql = "DELETE FROM genre WHERE genre = '%s' " % self.nom
+        sql = "DELETE FROM genre WHERE genre = '%s'; " % self.nom
         
         cur = conn.cursor()
         cur.execute(sql)
@@ -616,7 +616,7 @@ class Preferences :
     
     def test_nom(conn, nom,genre)-> int:
          cur=conn.cursor()
-         sql="SELECT Id FROM preferences WHERE utilisateur =%s and genre = %s " % (nom,genre)
+         sql="SELECT Id FROM preferences WHERE utilisateur ='%s' and genre = '%s'; " % (nom,genre)
          cur.execute(sql)
 
          raw=cur.fetchone()
@@ -634,7 +634,7 @@ class Preferences :
         
         self.utilisateur = str(input("Entrer l'identifiant de l'utilisateur : ")) 
         self.genre = str(input("Entrer le genre : "))
-        sql = "INSERT INTO utilisateur VALUES ('%s', '%s')" % (self.utilisateur, self.genre)
+        sql = "INSERT INTO utilisateur VALUES ('%s', '%s');" % (self.utilisateur, self.genre)
         cur = conn.cursor()
         cur.execute(sql)
         conn.commit()
@@ -647,7 +647,7 @@ class Preferences :
 
         self.utilisateur = str(input("Entrer l'identifiant de l'utilisateur : ")) 
         self.genre = str(input("Entrer le genre : "))
-        sql = "DELETE FROM preferences WHERE utilisateur = '%s' and genre = '%s' " % (self.utilisateur,self.genre)
+        sql = "DELETE FROM preferences WHERE utilisateur = '%s' and genre = '%s'; " % (self.utilisateur,self.genre)
         cur = conn.cursor()
         cur.execute(sql)
         conn.commit()
@@ -659,7 +659,7 @@ class Preferences :
         if self.test_nom(conn,self.utilisateur,self.genre) == False : 
             print("La relation n'existe pas")
             return 
-        sql = "SELECT * FROM preferences where utilisateur = '%s'  " %(self.utilisateur)
+        sql = "SELECT * FROM preferences where utilisateur = '%s';  " %(self.utilisateur)
     
         cur = conn.cursor()
         cur.execute(sql)
@@ -682,7 +682,7 @@ class Playlist :
     
     def test_Playlist(conn, playlist)-> int:
         cur=conn.cursor()
-        sql="SELECT * FROM playlist WHERE identifiant =%s" % (playlist)
+        sql="SELECT * FROM playlist WHERE identifiant ='%s';" % (playlist)
         cur.execute(sql)
         raw=cur.fetchone()
      
@@ -703,7 +703,7 @@ class Playlist :
             print("Impossible car l'identifiant existe deja, veuillez essayer un autre identifiant")
             return 
         
-        sql = "INSERT INTO utilisateur VALUES ('%s', '%s', '%s','%s','%s')" % (self.identifiant, self.titre, self.description,self.autorisation,self.utilisateur)
+        sql = "INSERT INTO utilisateur VALUES ('%s', '%s', '%s','%s','%s');" % (self.identifiant, self.titre, self.description,self.autorisation,self.utilisateur)
         
         cur = conn.cursor()
         cur.execute(sql)
@@ -720,14 +720,14 @@ class Playlist :
         self.utilisateur = str(input("Entrer le nom de l'utilisateur createur playlist : "))
        
         if self.test_Playlist(conn,self.identifiant) == False : 
-            print("le playlist n'existe pas")
+            print("La playlist n'existe pas")
             return 
 
     
         sql =  """
         UPDATE playlist
         SET  titre = '%s',description = '%s', autorisation = '%s', utilisateur = '%s'
-        WHERE identifiant = '%s'  """ % (self.titre, self.description,self.autorisation,self.utilisateur,self.identifiant) 
+        WHERE identifiant = '%s';  """ % (self.titre, self.description,self.autorisation,self.utilisateur,self.identifiant) 
        
         
         cur = conn.cursor()
@@ -741,7 +741,7 @@ class Playlist :
             print("Le playlist n'existe pas")
             return 
 
-        sql = "DELETE FROM playlist WHERE identifiant = '%s' " % self.identifiant
+        sql = "DELETE FROM playlist WHERE identifiant = '%s'; " % self.identifiant
         
         cur = conn.cursor()
         cur.execute(sql)
@@ -753,7 +753,7 @@ class Playlist :
     def affichage(self, conn):
         self.identifiant = str(input("Entrer l'identifiant : "))
         
-        sql = "SELECT * FROM playlist WHERE identifiant = '%s'" % self.identifiant
+        sql = "SELECT * FROM playlist WHERE identifiant = '%s';" % self.identifiant
     
         cur = conn.cursor()
         cur.execute(sql)
@@ -787,7 +787,7 @@ class Chanson:
 
     def test_ID(conn, ID)-> int:
         cur=conn.cursor()
-        sql="SELECT Id FROM Artiste WHERE Id=%s" % (ID)
+        sql="SELECT Id FROM Artiste WHERE Id='%s';" % (ID)
         cur.execute(sql)
         
         raw=cur.fetchone()
@@ -800,6 +800,7 @@ class Chanson:
     
         id = str(input("Id : "))
         while self.test_ID(conn,id):
+            print("ID déjà utilisé \n")
             id = str(input("Id : "))
 
         self.titre = str(input("Titre : "))
@@ -810,7 +811,7 @@ class Chanson:
 
         
         cur = conn.cursor()
-        sql = "INSERT INTO Chanson (Id, Titre, Duree, Pays, Album, Genre) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')"
+        sql = "INSERT INTO Chanson (Id, Titre, Duree, Pays, Album, Genre) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');"
         cur.execute(sql, (self.id, self.titre, self.duree, self.pays, self.album, self.genre))
         
         
@@ -819,6 +820,7 @@ class Chanson:
     
         self.id = str(input("Id : "))
         while not(self.test_ID(conn,id)):
+            print("ID déjà utilisé")
             self.id = str(input("Id : "))
 
         self.titre = str(input("Titre : "))
@@ -828,7 +830,7 @@ class Chanson:
         self.genre = str(input("Genre : "))
 
     
-        sql = "UPDATE Chanson SET Titre = '%s', Duree = '%s', Pays = '%s', Album = '%s', Genre ='%s' WHERE id = '%s' " % (self.titre, self.duree, self.pays, self.album, self.genre, self.id) 
+        sql = "UPDATE Chanson SET Titre = '%s', Duree = '%s', Pays = '%s', Album = '%s', Genre ='%s' WHERE id = '%s' ;" % (self.titre, self.duree, self.pays, self.album, self.genre, self.id) 
         
         cur = conn.cursor()
         cur.execute(sql)
@@ -840,7 +842,7 @@ class Chanson:
         id = str(input("Id : "))
         while not(self.test_ID(conn,id)):
             id = str(input("Id : "))
-        sql = "DELETE FROM utilisateur WHERE nom_utilisateur = '%s' " %id
+        sql = "DELETE FROM utilisateur WHERE nom_utilisateur = '%s' ;" %id
         
         cur = conn.cursor()
         cur.execute(sql)
@@ -850,22 +852,21 @@ class Chanson:
 
     def affichage(conn):
         sql = """    
-            SELECT * FROM Chanson
+            SELECT * FROM Chanson;
         """       
         cur = conn.cursor()
         cur.execute(sql)
         song = cur.fetchone()
         cur.close()
     
-        if user:
+        while song:
             print(f"Identifiant: {song[0]}")
             print(f"Titre: {song[1]}")
             print(f"Duree: {song[2]}")
             print(f"Pays: {song[3]}")
             print(f"Album: {song[4]}")
             print(f"Genre: {song[5]}")
-        else:
-            print(f"Chanson avec le nom '{song}' non trouvé.")
+            song=cur.fetchone()
         
 class Album:
 
@@ -877,7 +878,7 @@ class Album:
 
     def test_ID(conn, ID) -> bool:
         cur = conn.cursor()
-        sql = "SELECT Id FROM Artiste WHERE Id = %s"
+        sql = "SELECT Id FROM Artiste WHERE Id = '%s';"
         cur.execute(sql, (ID,))
         raw = cur.fetchone()
         cur.close()
@@ -895,7 +896,7 @@ class Album:
         cur = conn.cursor()
         sql = """
         INSERT INTO Album (Id, Titre, Sortie, Artiste) 
-        VALUES (%s, %s, %s, %s)
+        VALUES ('%s', '%s', '%s', '%s');
         """
         cur.execute(sql, (self.id, self.titre, self.sortie, self.artiste))
         conn.commit()
@@ -912,8 +913,8 @@ class Album:
 
         sql = """
         UPDATE Album 
-        SET Titre = %s, Sortie = %s, Artiste = %s 
-        WHERE Id = %s
+        SET Titre = '%s', Sortie = '%s', Artiste = '%s' 
+        WHERE Id = '%s';
         """
         cur = conn.cursor()
         cur.execute(sql, (self.titre, self.sortie, self.artiste, id))
@@ -925,7 +926,7 @@ class Album:
         while not self.test_ID(conn, id):
             id = input("Id : ")
 
-        sql = "DELETE FROM Album WHERE Id = %s"
+        sql = "DELETE FROM Album WHERE Id = '%s';"
         cur = conn.cursor()
         cur.execute(sql, (id,))
         conn.commit()
@@ -933,7 +934,7 @@ class Album:
         print(f"Album '{id}' a été supprimé.")
 
     def affichage(conn):
-        sql = "SELECT * FROM Album"
+        sql = "SELECT * FROM Album;"
         cur = conn.cursor()
         cur.execute(sql)
         albums = cur.fetchall()
@@ -974,7 +975,7 @@ class ContientAlbum:
         cur = conn.cursor()
         sql = """
         INSERT INTO ContientAlbum (album, playlist) 
-        VALUES (%s, %s)
+        VALUES ('%s', '%s');
         """
         cur.execute(sql, (self.album, self.playlist))
         conn.commit()
@@ -997,8 +998,8 @@ class ContientAlbum:
 
         sql = """
         UPDATE ContientAlbum 
-        SET album = %s, playlist = %s
-        WHERE album = %s AND playlist = %s
+        SET album = '%s', playlist = '%s'
+        WHERE album = '%s' AND playlist = '%s';
         """
         cur = conn.cursor()
         cur.execute(sql, (self.album, self.playlist, old_album, old_playlist))
@@ -1012,7 +1013,7 @@ class ContientAlbum:
             album = input("Album ID : ")
             playlist = input("Playlist ID : ")
 
-        sql = "DELETE FROM ContientAlbum WHERE album = %s AND playlist = %s"
+        sql = "DELETE FROM ContientAlbum WHERE album = '%s' AND playlist = '%s';"
         cur = conn.cursor()
         cur.execute(sql, (album, playlist))
         conn.commit()
@@ -1020,7 +1021,8 @@ class ContientAlbum:
         print(f"Liaison entre l'album '{album}' et la playlist '{playlist}' a été supprimée.")
 
     def affichage(conn):
-        sql = "SELECT * FROM ContientAlbum"
+        ID=str(input("Tapez l'ID de la Playlist"))
+        sql = "SELECT * FROM ContientAlbum WHERE album='%d';"%ID
         cur = conn.cursor()
         cur.execute(sql)
         links = cur.fetchall()
@@ -1051,8 +1053,8 @@ class ContientAlbum:
 
         sql = """
         UPDATE ContientAlbum 
-        SET album = %s, playlist = %s
-        WHERE album = %s AND playlist = %s
+        SET album = '%s', playlist = '%s'
+        WHERE album = '%s' AND playlist = '%s';
         """
         cur = conn.cursor()
         cur.execute(sql, (self.album, self.playlist, old_album, old_playlist))
@@ -1066,7 +1068,7 @@ class ContientAlbum:
             album = input("Album ID : ")
             playlist = input("Playlist ID : ")
 
-        sql = "DELETE FROM ContientAlbum WHERE album = %s AND playlist = %s"
+        sql = "DELETE FROM ContientAlbum WHERE album = '%s' AND playlist = '%s';"
         cur = conn.cursor()
         cur.execute(sql, (album, playlist))
         
@@ -1075,7 +1077,7 @@ class ContientAlbum:
 
     
     def affichage(conn):
-        sql = "SELECT * FROM ContientAlbum"
+        sql = "SELECT * FROM ContientAlbum;"
         cur = conn.cursor()
         cur.execute(sql)
         links = cur.fetchall()
@@ -1093,7 +1095,7 @@ class ContientChanson:
 
     def inserer(conn,idPlaylist, idChanson):
         cursor = conn.cursor()
-        insertion = "INSERT INTO ContientChanson VALUES ('%s', '%s')" % (idPlaylist, idChanson)
+        insertion = "INSERT INTO ContientChanson VALUES ('%s', '%s');" % (idPlaylist, idChanson)
         cursor.execute(insertion)
         
         
@@ -1101,21 +1103,21 @@ class ContientChanson:
     
     def modifier(conn,colonne, valeur, condition):
         cursor = conn.cursor()
-        modification = "UPDATE ContientChanson SET %s = %s WHERE %s" % (colonne, valeur, condition)
+        modification = "UPDATE ContientChanson SET %s = %s WHERE %s;" % (colonne, valeur, condition)
         cursor.execute(modification)
         
         
 
     def supprimer(conn,condition):
         cursor = conn.cursor()
-        suppression = "DELETE FROM ContientChanson WHERE %s" % (condition)
+        suppression = "DELETE FROM ContientChanson WHERE %s;" % (condition)
         cursor.execute(suppression)
         
         
 
     def afficherTous(conn):
         cursor = conn.cursor()
-        affichage = "SELECT * FROM ContientChanson"
+        affichage = "SELECT * FROM ContientChanson;"
         cursor.execute(affichage)
         rawdata = cursor.fetchone()
         while rawdata:
@@ -1123,41 +1125,43 @@ class ContientChanson:
             rawdata = cursor.fetchone()
         
 	    
-    def afficherParCondition(conn,condition):
+    def afficherParCondition(conn):
         cursor = conn.cursor()
-        affichage = "SELECT * FROM ContientChanson WHERE %s" % (condition)
+        ID_P=str(input("ID de la playlist :"))
+        affichage = "SELECT * FROM ContientChanson WHERE idPlaylist=='%s';" % (ID_P)
         cursor.execute(affichage)
         rawdata = cursor.fetchone()
         while rawdata:
-            print(rawdata[0], rawdata[1])
+            print("ID playlist : %s" % rawdata[0])
+            print("ID Chanson : %s" % rawdata[1])
             rawdata = cursor.fetchone()
         
 #----------------------------------------------------------------------------------------------------#
 class Historique:
     def inserer(conn,chanson, utilisateur, compteur):
         cursor = conn.cursor()
-        insertion = "INSERT INTO Historique VALUES ('%s', '%s', '%s')" % (chanson, utilisateur, compteur)
+        insertion = "INSERT INTO Historique VALUES ('%s', '%s', '%s');" % (chanson, utilisateur, compteur)
         cursor.execute(insertion)
         
         
 
     def modifier(conn,colonne, valeur, condition):
         cursor = conn.cursor()
-        modification = "UPDATE Historique SET %s = %s WHERE %s" % (colonne, valeur, condition)
+        modification = "UPDATE Historique SET %s = %s WHERE %s;" % (colonne, valeur, condition)
         cursor.execute(modification)
         
         
 
     def supprimer(conn,condition):
         cursor = conn.cursor()
-        suppression = "DELETE FROM Historique WHERE %s" % (condition)
+        suppression = "DELETE FROM Historique WHERE %s;" % (condition)
         cursor.execute(suppression)
         
         
 
     def afficherTous(conn):
         cursor = conn.cursor()
-        affichage = "SELECT * FROM Historique"
+        affichage = "SELECT * FROM Historique;"
         cursor.execute(affichage)
         rawdata = cursor.fetchone()
         while rawdata:
@@ -1165,40 +1169,47 @@ class Historique:
             rawdata = cursor.fetchone()
         
 
-    def afficherParCondition(conn,condition):
+    def afficherParCondition(conn):
         cursor = conn.cursor()
-        affichage = "SELECT * FROM Historique WHERE %s" % (condition)
+        ID_U=str(input("ID de l'utilisateur :"))
+        affichage = "SELECT * FROM Historique WHERE utilisateur='%s';" % (ID_U)
         cursor.execute(affichage)
         rawdata = cursor.fetchone()
         while rawdata:
-            print(rawdata[0], rawdata[1], rawdata[2])
+            print("Id Chanson : %s" %rawdata[0])
+            print("ID utilisateur : %s "% rawdata[1])
+            print("Nombre d'écoutes : %s" % rawdata[2])
             rawdata = cursor.fetchone()
         
 #----------------------------------------------------------------------------------------------------#
 class Amis:
-    def inserer(conn,utilisateur1, utilisateur2):
+    def inserer(conn):
+        utilisateur1=str(input("ID de l'utilisateur 1\n"))
+        utilisateur2=str(input("ID de l'utilisateur 2\n"))
         cursor = conn.cursor()
-        insertion = "INSERT INTO Amis VALUES ('%s', '%s')" % (utilisateur1, utilisateur2)
+        insertion = "INSERT INTO Amis VALUES ('%s', '%s');" % (utilisateur1, utilisateur2)
         cursor.execute(insertion)
         
         
 
     def modifier(conn,colonne, valeur, condition):
         cursor = conn.cursor()
-        modification = "UPDATE Amis SET %s = %s WHERE %s" % (colonne, valeur, condition)
+        modification = "UPDATE Amis SET %s = %s WHERE %s;" % (colonne, valeur, condition)
         cursor.execute(modification)
         
         
 
-    def supprimer(conn,condition):
+    def supprimer(conn):
+        utilisateur1=str(input("ID de l'utilisateur 1\n"))
+        utilisateur2=str(input("ID de l'utilisateur 2\n"))
         cursor = conn.cursor()
-        suppression = "DELETE FROM Amis WHERE %s" % (condition)
+        suppression = "DELETE FROM Amis WHERE utilisateur1='%s' AND utilisateur2='%s';" % (utilisateur1, utilisateur2)
         cursor.execute(suppression)
         
         
     def afficherTous(conn):
         cursor = conn.cursor()
-        affichage = "SELECT * FROM Amis"
+        affichage = "SELECT * FROM Amis;"
         cursor.execute(affichage)
         rawdata = cursor.fetchone()
         while rawdata:
@@ -1206,9 +1217,10 @@ class Amis:
             rawdata = cursor.fetchone()
         
 
-    def afficherParCondition(conn,condition):
+    def afficherParCondition(conn):
         cursor = conn.cursor()
-        affichage = "SELECT * FROM Amis WHERE %s" % (condition)
+        ID=str(input("ID d'un utilisateur"))
+        affichage = "SELECT * FROM Amis WHERE utilisateur1='%s';" % (ID)
         cursor.execute(affichage)
         rawdata = cursor.fetchone()
         while rawdata:
@@ -1217,7 +1229,8 @@ class Amis:
         
 #----------------------------------------------------------------------------------------------------#
 class Editeur:
-    def inserer(conn,nom):
+    def inserer(conn):
+        nom=str(input("Tapez le nom de l'éditeur à ajouter"))
         cursor = conn.cursor()
         insertion = "INSERT INTO Editeur VALUES ('%s')" % (nom)
         cursor.execute(insertion)
@@ -1231,9 +1244,10 @@ class Editeur:
         
         
 
-    def supprimer(conn,condition):
+    def supprimer(conn):
+        nom=str(input("Tapez le nom de l'éditeur à ajouter"))
         cursor = conn.cursor()
-        suppression = "DELETE FROM Editeur WHERE %s" % (condition)
+        suppression = "DELETE FROM Editeur WHERE nom='%s';" % (nom)
         cursor.execute(suppression)
         
         
@@ -1242,7 +1256,7 @@ class Editeur:
     def afficherTous(conn):
         try:
          cur = conn.cursor()
-         sql= "SELECT * FROM Editeur"
+         sql= "SELECT * FROM Editeur;"
          cur.execute(sql)
 
         except Exception as error:
@@ -1281,11 +1295,11 @@ while choix1>0 and choix1<4:
 
 
   elif choix1==2:
-      f="""Afficher :\n1:Utilisateur\n2:Artiste\n3:Chanson\n4:Album\n
-      5:Editeurs\n6:Genres musicaux\n7:Historique d'un utilisateur\n
-      8:Préférences d'un utilisateur\n9:Playlists d'un utilisateur\n
-      10:Amis d'un utilisateur\n11:Droits d'édition d'une chanson ou d'un éditeur\n
-      12:Droits artistiques d'une chanson ou d'un artiste"""
+      f="""Afficher :\n1:Utilisateur\n2:Artiste\n3:Chanson\n4:Album\n5:Editeurs\n
+6:Genres musicaux\n7:Historique d'un utilisateur\n
+8:Préférences d'un utilisateur\n9:Playlists d'un utilisateur\n
+10:Amis d'un utilisateur\n11:Droits d'édition d'une chanson ou d'un éditeur\n
+12:Droits artistiques d'une chanson ou d'un artiste\n13:Albums d'une playlist\n14:Chansons d'une playlist\n"""
       print(f)
       choixA=int(input())
       
@@ -1308,16 +1322,16 @@ while choix1>0 and choix1<4:
          Genre.affichage(Genre, conn)
 
       elif choixA==7:
-         Historique.afficherParCondition(conn,1)
+         Historique.afficherParCondition(conn)
 
-      #elif choixA==8:
-      #   Preferences.affichage(conn)
+      elif choixA==8:
+         Preferences.affichage(Preferences,conn)
 
-      #elif choixA==9:
-      #   Playlist.affichage(conn)
+      elif choixA==9:
+         Playlist.affichage(Playlist, conn)
 
       elif choixA==10:
-          Amis.afficherParCondition(conn,1)
+          Amis.afficherParCondition(conn)
 
       elif choixA==11:
          choix=int(input("Tapez 1 pour connaitre l'éditeur d'une chanson ou 2 pour les chansons d'un éditeur\n"))
@@ -1340,6 +1354,13 @@ while choix1>0 and choix1<4:
            DroitsArtistiques.afficherliste(DroitsArtistiques,conn,id_a)
          else:
            print("Relisez la consigne et recommencez")
+
+      elif choixA==13:
+         ContientAlbum.affichage(conn)
+      
+      elif choixA==14:
+         ContientChanson.afficherParCondition(conn)
+
             
          
   elif choix1==3:
@@ -1359,25 +1380,25 @@ while choix1>0 and choix1<4:
           Artiste.modifier(Artiste,conn)
 
      elif choixA==3:
-         Chanson.modifier(conn)
+         Chanson.modifier(Chanson, conn)
       
      elif choixA==4:
-         Album.modifier(conn)
+         Album.modifier(Album, conn)
 
      elif choixA==5:
          Editeur.modifier(conn)
 
      elif choixA==6:
-         Genre.modifier(Genre, conn)
+         Genre
 
      elif choixA==7:
-         Historique.modifier(conn,1)
+         Historique
 
-     #elif choixA==8:
-     #   Preferences.modifier(conn)
+     elif choixA==8:
+        Preferences
 
-     #elif choixA==9:
-     #   Playlist.modifier(conn)
+     elif choixA==9:
+        Playlist.modifier(Playlist,conn)
 
      elif choixA==10:
          Amis.modifier(conn,1) 
