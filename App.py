@@ -546,21 +546,36 @@ class Utilisateur :
         self.dateinscription = dateinscription 
         self.typeu = typeu
         
-    def test_ID(conn, ID)-> int:
+    def test_ID(conn, ID)-> bool:
      cur=conn.cursor()
      sql="SELECT id FROM Utilisateur WHERE id ='%s';" % (ID)
      cur.execute(sql)
-
      raw=cur.fetchone()
      if raw:
         return True
+     else:
+        return False
+    
+    def test_nom(conn, ID)-> bool:
+     cur=conn.cursor()
+     sql="SELECT nom_utilisateur FROM Utilisateur WHERE nom_utilisateur ='%s';" % (ID)
+     cur.execute(sql)
+     raw=cur.fetchone()
      if raw:
-        return False   
+        return True
+     else:
+        return False    
     
     def ajouter(self,conn) :
         
         self.identifiant = str(input("Entrer l'identifiant : "))
+        while( self.test_ID(conn,self.identifiant) == True ): 
+            print("Impossible car l'identifiant existe deja, veuillez essayer un autre identifiant")
+            self.identifiant = str(input("Entrer l'identifiant : "))
         self.nom_utilisateur = str(input("Entrer le nom_utilisateur : "))
+        while( self.test_nom(conn,self.nom_utilisateur) == True ): 
+            print("Impossible car le nom existe deja, veuillez essayer un autre nom")
+            self.identifiant = str(input("Entrer l'identifiant : "))
         self.motdepasse = str(input("Entrer le mot de passe : "))
         self.adressemail = str(input("Entrer l'adressemail: "))
         self.dateinscription = str(input("Entrer la date d'inscription : "))
@@ -568,9 +583,7 @@ class Utilisateur :
         if typeu == 1 : self.typeu = 'premium'
         if typeu == 0 : self.typeu = 'régulier'
         
-        if self.test_ID(conn,self.identifiant) == True : 
-            print("Impossible car l'identifiant existe deja, veuillez essayer un autre identifiant")
-            return 
+        
         
         sql = "INSERT INTO utilisateur VALUES ('%s', '%s', '%s','%s','%s','%s');" % (self.identifiant, self.nom_utilisateur, self.motdepasse,self.adressemail,self.dateinscription,self.typeu)
         
@@ -614,11 +627,16 @@ class Utilisateur :
 
         sql = "DELETE FROM utilisateur WHERE nom_utilisateur = '%s'; " % self.nom_utilisateur
         
-        cur = conn.cursor()
-        cur.execute(sql)
-        conn.commit()
+        try:
+            cur = conn.cursor()
+            cur.execute(sql)
+            conn.commit()
+            print(f"Utilisateur '{self.nom_utilisateur}' a été supprimé.")
+        except Exception as error:
+            print("Une exception s'est produite : ", error)
+            print("Type d'exception : ", type(error))
+
         
-        print(f"Utilisateur '{self.nom_utilisateur}' a été supprimé.")
         
     def affichage(self,conn) : 
         self.nom_utilisateur = str(input("Entrer le nom_utilisateur : "))
@@ -810,16 +828,16 @@ class Playlist :
     def ajouter(self,conn) :
 
         self.identifiant = str(input("Entrer l'identifiant du playlist : ")) 
+        while(self.test_Playlist(conn,self.identifiant) == True):
+            print("id déja existante")
+            self.identifiant = str(input("Entrer l'identifiant du playlist : ")) 
         self.titre = str(input("Entrer le titre du playlist : "))
         self.description = str(input("Entrer la description du playlist : "))
         self.autorisation = str(input("Entrer l'autorisation du playlist : ")) 
-        self.utilisateur = str(input("Entrer le nom de l'utilisateur createur playlist : "))
+        self.utilisateur = str(input("Entrer l'id de l'utilisateur createur playlist : "))
         
-        if self.test_Playlist(conn,self.identifiant) == True : 
-            print("Impossible car l'identifiant existe deja, veuillez essayer un autre identifiant")
-            return 
         
-        sql = "INSERT INTO utilisateur VALUES ('%s', '%s', '%s','%s','%s');" % (self.identifiant, self.titre, self.description,self.autorisation,self.utilisateur)
+        sql = "INSERT INTO playlist VALUES ('%s', '%s', '%s','%s','%s');" % (self.identifiant, self.titre, self.description,self.autorisation,self.utilisateur)
         
         cur = conn.cursor()
         cur.execute(sql)
@@ -828,16 +846,20 @@ class Playlist :
         
     def modifier(self,conn):
         
-    
+        
         self.identifiant = str(input("Entrer l'identifiant du playlist : ")) 
+        while (self.test_Playlist(conn,self.identifiant) == False) : 
+            print("La playlist n'existe pas")
+            self.identifiant = str(input("Entrer l'identifiant du playlist : ")) 
         self.titre = str(input("Entrer le titre du playlist : "))
         self.description = str(input("Entrer la description du playlist : "))
         self.autorisation = str(input("Entrer l'autorisation du playlist : ")) 
-        self.utilisateur = str(input("Entrer le nom de l'utilisateur createur playlist : "))
-       
-        if self.test_Playlist(conn,self.identifiant) == False : 
-            print("La playlist n'existe pas")
-            return 
+        self.utilisateur = str(input("Entrer l'id de l'utilisateur createur playlist : "))
+        while(self.test_Utilisateur(conn,self.utilisateur) == False) : 
+            print("L'utilisateur n'existe pas")
+            self.utilisateur = str(input("Entrer le code de l'utilisateur createur playlist : "))
+
+      
 
     
         sql =  """
