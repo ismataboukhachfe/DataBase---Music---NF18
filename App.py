@@ -278,7 +278,9 @@ class Artiste:
 
 
 class DroitsEdition:
-   def ajouter(self, conn, ID_chanson, nom_e):
+   def ajouter(self, conn):
+      ID_chanson=str(input("ID de la chanson: \n"))
+      nom_e=str(input("Nom de l'éditeur : \n"))
       try:
         cur=conn.cursor()
         sql = "INSERT INTO DroitsEdition VALUES ('%s' , '%s');" % (nom_e, ID_chanson)
@@ -320,7 +322,19 @@ class DroitsEdition:
         print("Nom éditeur : %s \n"% raw[1])
         raw=cur.fetchone()  
 class DroitsArtistiques:
-   def ajouter(self,conn,ID_chanson, ID_Artiste, type):
+   def ajouter(self,conn):
+      ID_chanson=str(input("ID Chanson : \n"))
+      ID_Artiste=str(input("ID Artiste : \n"))
+      typenum=int(input("Type : Tapez 1 pour 'auteur' ou 2 pour 'compositeur' ou 3 pour 'collaborateur'"))
+      while type<1 or type>3:
+               print("Erreur")
+               type=int(input("Type : Tapez 1 pour 'auteur' ou 2 pour 'compositeur' ou 3 pour 'collaborateur'"))
+      if typenum==1:
+         type='auteur'
+      elif typenum==2:
+         type='compositeur'
+      elif typenum==3:
+         type='collaborateur'
       try:
         cur=conn.cursor()
         sql = "INSERT INTO DroitsArtistiques VALUES ('%s' , '%s', '%s');" % (ID_chanson,ID_Artiste, type)
@@ -1365,9 +1379,10 @@ while choix1>0 and choix1<4:
          
   elif choix1==3:
      f = """Modifier la table : \n1:Utilisateur\n2:Artiste\n3:Chanson\n
-     4:Album\n5:Editeur\n6:Genre musical\n7:Historique\n
-     8:Préférences\n9:Playlists\n10:Amis\n
-     11:DroitsEdition\n12:DroitsArtistiques\n"""
+4:Album\n5:Editeur\n6:Genre musical\n7:Historique\n
+8:Préférences\n9:Playlists\n10:Amis\n
+11:DroitsEdition\n12:DroitsArtistiques\n
+"""
   
      print(f)
 
@@ -1412,9 +1427,9 @@ while choix1>0 and choix1<4:
 
   elif choix1==4:
      f = """Insérer une donnée dans la table : \n1:Utilisateur\n2:Artiste\n3:Chanson\n
-     4:Album\n5:Editeur\n6:Genre musical\n7:Historique\n
-     8:Préférences\n9:Playlists\n10:Amis\n
-     11:DroitsEdition\n12:DroitsArtistiques\n"""
+4:Album\n5:Editeur\n6:Genre musical\n7:Historique\n
+8:Préférences\n9:Playlists\n10:Amis\n
+11:DroitsEdition\n12:DroitsArtistiques\n"""
 
      print(f)
 
@@ -1448,20 +1463,20 @@ while choix1>0 and choix1<4:
         Playlist.ajouter(Playlist,conn)
 
      elif choixA==10:
-         Amis.inserer(conn) 
+        Amis.inserer(conn) 
 
      elif choixA==11:
-        0    
+        DroitsEdition.ajouter(DroitsEdition, conn)
 
      elif choixA==12:
-        0
+        DroitsArtistiques.ajouter(DroitsArtistiques, conn)
 
 
   elif choix1==5:
      f = """Supprimer une donnée de la table : \n1:Utilisateur\n2:Artiste\n3:Chanson\n
-     4:Album\n5:Editeur\n6:Genre musical\n7:Historique\n
-     8:Préférences\n9:Playlists\n10:Amis\n
-     11:DroitsEdition\n12:DroitsArtistiques\n"""
+4:Album\n5:Editeur\n6:Genre musical\n7:Historique\n
+8:Préférences\n9:Playlists\n10:Amis\n
+11:DroitsEdition\n12:DroitsArtistiques\n"""
 
      print(f)
 
