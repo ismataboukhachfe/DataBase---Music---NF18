@@ -796,7 +796,7 @@ class Chanson:
         else:
            return False
 
-    def insert(self):
+    def insert(self,conn):
     
         id = str(input("Id : "))
         while self.test_ID(conn,id):
@@ -1427,10 +1427,10 @@ while choix1>0 and choix1<4:
           Artiste.ajouter(Artiste,conn)
 
      elif choixA==3:
-         Chanson.insert(conn)
+         Chanson.insert(Chanson, conn)
       
      elif choixA==4:
-         Album.insert(conn)
+         Album.insert(Album, conn)
 
      elif choixA==5:
          Editeur.inserer(conn)
@@ -1439,16 +1439,16 @@ while choix1>0 and choix1<4:
          Genre.ajouter(Genre, conn)
 
      elif choixA==7:
-         Historique.inserer(conn,1)
+         Historique.inserer(conn) #à corriger
 
-     #elif choixA==8:
-     #   Preferences.ajouter(conn)
+     elif choixA==8:
+        Preferences.ajouter(Preferences,conn)
 
-     #elif choixA==9:
-     #   Playlist.ajouter(conn)
+     elif choixA==9:
+        Playlist.ajouter(Playlist,conn)
 
      elif choixA==10:
-         Amis.inserer(conn,1) 
+         Amis.inserer(conn) 
 
      elif choixA==11:
         0    
@@ -1474,10 +1474,10 @@ while choix1>0 and choix1<4:
           Artiste.supprimer(Artiste,conn)
 
      elif choixA==3:
-         Chanson.delete(conn)
+         Chanson.delete(Chanson,conn)
       
      elif choixA==4:
-         Album.delete(conn)
+         Album.delete(Album,conn)
 
      elif choixA==5:
          Editeur.supprimer(conn)
@@ -1486,16 +1486,16 @@ while choix1>0 and choix1<4:
          Genre.delete(Genre, conn)
 
      elif choixA==7:
-         Historique.supprimer(conn,1)
+         Historique.supprimer(conn)  #à corriger
 
-     #elif choixA==8:
-     #   Preferences.delete(conn)
+     elif choixA==8:
+        Preferences.delete(Preferences,conn)
 
-     #elif choixA==9:
-     #   Playlist.delete(conn)
+     elif choixA==9:
+        Playlist.delete(Playlist,conn)
 
      elif choixA==10:
-         Amis.supprimer(conn,1) 
+         Amis.supprimer(conn) 
 
      elif choixA==11:
         0
