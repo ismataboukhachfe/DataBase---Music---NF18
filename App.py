@@ -990,23 +990,48 @@ class Chanson:
         print(f"Utilisateur '{id}' a été supprimé.")
 
     def affichage(conn):
-        sql = """    
-            SELECT * FROM Chanson;
-        """       
-        cur = conn.cursor()
-        cur.execute(sql)
-        song = cur.fetchone()
+        choix=str(input("Tapez l'ID d'une chanson ou 0 pour avoir la liste de toute les chansons"))
+        if choix=='0':
+            try:
+                sql = """    
+                    SELECT * FROM Chanson;
+                """       
+                cur = conn.cursor()
+                cur.execute(sql)
+                
     
-        while song:
-            print(f"Identifiant: {song[0]}")
-            print(f"Titre: {song[1]}")
-            print(f"Duree: {song[2]}")
-            print(f"Pays: {song[3]}")
-            print(f"Album: {song[4]}")
-            print(f"Genre: {song[5]}")
-            song=cur.fetchone()
+            except Exception as error:
+               print("Une exception s'est produite : ", error)
+               print("Type d'exception : ", type(error))
+            song = cur.fetchone()   
+            while song:
+                print(f"Identifiant: {song[0]}")
+                print(f"Titre: {song[1]}")
+                print(f"Duree: {song[2]}")
+                print(f"Pays: {song[3]}")
+                print(f"Album: {song[4]}")
+                print(f"Genre: {song[5]}")
+                song=cur.fetchone()
         
-        cur.close()
+            cur.close()
+        else:
+            try:
+                sql = "SELECT * FROM Chanson WHERE Id='%s';"% choix      
+                cur = conn.cursor()
+                cur.execute(sql)
+            except Exception as error:
+               print("Une exception s'est produite : ", error)
+               print("Type d'exception : ", type(error))
+            song = cur.fetchone()   
+            while song:
+                print(f"Identifiant: {song[0]}")
+                print(f"Titre: {song[1]}")
+                print(f"Duree: {song[2]}")
+                print(f"Pays: {song[3]}")
+                print(f"Album: {song[4]}")
+                print(f"Genre: {song[5]}")
+                song=cur.fetchone() 
+            
 
 class Album:
 
