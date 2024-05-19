@@ -1398,7 +1398,26 @@ class ContientAlbum:
 
 class ContientChanson:
 
-    def inserer(conn,idPlaylist, idChanson):
+    def test_ID(conn, table, ID) -> bool:
+        try:
+            cur = conn.cursor()
+            sql = "SELECT Id FROM %s WHERE Id = %%s" % table
+            cur.execute(sql, (ID,))
+            raw = cur.fetchone()
+        except Exception as error:
+           print("Une exception s'est produite : ", error)
+           print("Type d'exception : ", type(error))
+        return raw is not None
+
+    def inserer(self, conn):
+        idPlaylist = input("ID de la Playlist : ")
+        while not self.test_ID(conn, "Playlist", idPlaylist):
+            idPlaylist = input("ID de la Playlist : ")
+
+        idChanson = input("ID de la Chanson : ")
+        while not self.test_ID(conn, "Chanson", idChanson):
+            self.playlist = input("ID de la chanson : ")
+
         try:
             cursor = conn.cursor()
             insertion = "INSERT INTO ContientChanson VALUES ('%s', '%s');" % (idPlaylist, idChanson)
@@ -1703,9 +1722,8 @@ while choix1>0 and choix1<6:
          
   elif choix1==3:
      f = """Modifier une donnée de la table : \n1:Utilisateur\n2:Artiste\n3:Chanson\n
-4:Album\n5:Genre musical\n6:Historique\n
-7:Préférences\n8:Playlists\n9:Amis\n
-10:DroitsEdition\n11:DroitsArtistiques\n"""
+4:Album\n5:Playlists\n
+6:DroitsEdition\n7:DroitsArtistiques\n"""
   
      print(f)
 
@@ -1723,35 +1741,22 @@ while choix1>0 and choix1<6:
      elif choixA==4:
          Album.modifier(Album, conn)
 
-
      elif choixA==5:
-         Genre
-
-     elif choixA==6:
-         Historique
-
-     elif choixA==7:
-         0
-
-     elif choixA==8:
         Playlist.modifier(Playlist,conn)
 
-     elif choixA==9:
-         Amis.supprimer(conn) 
-         Amis.inserer(conn)
+     elif choixA==6:
+         DroitsEdition.modifier(DroitsEdition, conn)    
 
-     elif choixA==10:
-         0    
-
-     elif choixA==11:
-         0
+     elif choixA==7:
+         DroitsArtistiques.modifier(DroitsArtistiques, conn)
 
 
   elif choix1==4:
      f = """Insérer une donnée dans la table : \n1:Utilisateur\n2:Artiste\n3:Chanson\n
 4:Album\n5:Editeur\n6:Genre musical\n7:Historique\n
 8:Préférences\n9:Playlists\n10:Amis\n
-11:DroitsEdition\n12:DroitsArtistiques\n"""
+11:DroitsEdition\n12:DroitsArtistiques\n
+12:Album dans une playlist(ContientAlbum)\n13:Chanson dans une playlist(ContientChanson)"""
 
      print(f)
 
@@ -1793,13 +1798,19 @@ while choix1>0 and choix1<6:
      elif choixA==12:
         DroitsArtistiques.ajouter(DroitsArtistiques, conn)
 
+     elif choixA==13:
+        ContientAlbum.insert(ContientAlbum, conn)
+
+     elif choixA==14:
+        ContientChanson.inserer(ContientChanson, conn)
+
 
   elif choix1==5:
 
-     f = """Supprimer une donnée de la table : \n1:Utilisateur\n2:Artiste\n3:Chanson\n
-4:Album\n5:Genre musical\n6:Historique\n
-7:Préférences\n8:Playlists\n9:Amis\n
-10:DroitsEdition\n11:DroitsArtistiques\n"""
+     f = """Supprimer une donnée de la table : \n1:Utilisateur (non lié) \n2:Artiste (non lié) \n3:Chanson (non liée)\n
+4:Album(non liée)\n5:Genre musical (non lié)\n
+6:Préférences\n7:Playlists\n8:Amis\n
+9:DroitsEdition\n10:DroitsArtistiques\n"""
 
      print(f)
 
@@ -1821,22 +1832,19 @@ while choix1>0 and choix1<6:
          Genre.delete(Genre, conn)
 
      elif choixA==6:
-         Historique.supprimer(conn)  #à corriger
-
-     elif choixA==7:
         Preferences.delete(Preferences,conn)
 
-     elif choixA==8:
+     elif choixA==7:
         Playlist.delete(Playlist,conn)
 
+     elif choixA==8:
+        Amis.supprimer(conn) 
+
      elif choixA==9:
-         Amis.supprimer(conn) 
+        DroitsEdition.supprimer(DroitsEdition, conn)
 
      elif choixA==10:
-        0
-
-     elif choixA==11:
-        0
+        DroitsArtistiques.supprimer(DroitsArtistiques, conn)
 
   choix1=int(input("Tapez le numéro correspondant à votre choix: \n 1 : Questions SQL \n 2 : Afficher des données \n 3 : Modifier la BDD\n 4 : Insérer une donnée\n 5 : Supprimer un élément d'une table\n Autre pour quitter \n"))
   
