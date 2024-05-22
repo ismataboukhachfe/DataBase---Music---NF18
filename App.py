@@ -1756,7 +1756,7 @@ while choix1>0 and choix1<6:
   elif choix1==4:
      f = """Insérer une donnée dans la table : \n1:Utilisateur\n2:Artiste\n3:Chanson\n
 4:Album\n5:Editeur\n6:Genre musical\n
-7:Préférences\n8:Playlists\n9:Amis\n
+8:Playlists\n9:Amis\n
 10:DroitsEdition\n11:DroitsArtistiques\n
 12:Album dans une playlist(ContientAlbum)\n13:Chanson dans une playlist(ContientChanson)"""
 
@@ -1782,8 +1782,6 @@ while choix1>0 and choix1<6:
      elif choixA==6:
          Genre.ajouter(Genre, conn)
 
-     elif choixA==7:
-        Preferences.ajouter(Preferences,conn)
 
      elif choixA==8:
         Playlist.ajouter(Playlist,conn)
@@ -1808,7 +1806,6 @@ while choix1>0 and choix1<6:
 
      f = """Supprimer une donnée de la table : \n1:Utilisateur (non lié) \n2:Artiste (non lié) \n3:Chanson (non liée)\n
 4:Album(non liée)\n5:Genre musical (non lié)\n
-6:Préférences\n7:Playlists\n8:Amis\n
 9:DroitsEdition\n10:DroitsArtistiques\n"""
 
      print(f)
@@ -1830,15 +1827,7 @@ while choix1>0 and choix1<6:
      elif choixA==5:
          Genre.delete(Genre, conn)
 
-     elif choixA==6:
-        Preferences.delete(Preferences,conn)
-
-     elif choixA==7:
-        Playlist.delete(Playlist,conn)
-
-     elif choixA==8:
-        Amis.supprimer(conn) 
-
+ 
      elif choixA==9:
         DroitsEdition.supprimer(DroitsEdition, conn)
 
