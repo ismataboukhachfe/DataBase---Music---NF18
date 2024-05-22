@@ -10,7 +10,6 @@ DATABASE = "dbnf18p032"
 try :
 	conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
 	print("Connexion réussie \n")
-    #
 
 except Exception as error:
 	print("Une exception s'est produite : ", error)
@@ -41,7 +40,7 @@ class Artiste:
     else:
       return False, ""
 
-  def test_ID(conn, ID)-> int:
+  def test_ID(conn, ID)-> bool:
      try:
       cur=conn.cursor()
       sql="SELECT Id FROM Artiste WHERE Id='%s';" % (ID)
@@ -74,7 +73,7 @@ class Artiste:
 
   def ajouter(self,conn):
     id=str(input("Entrez le numéro d'ID \n"))
-    testID=self.test_ID(id)
+    testID=self.test_ID(conn,id)
     while testID:
          id=str(input("Tapez un ID différent \n"))
          testID=self.test_id(conn,id)
@@ -196,7 +195,7 @@ class Artiste:
 
   def modifier(self, conn):
     ID=str(input("Tapez l'ID de l'artiste"))
-    test_id=self.test_ID(conn,ID)
+    test_id= self.test_ID(conn,ID)
     if test_id==False:
        print("Artiste non trouvé")
 
@@ -239,13 +238,16 @@ class Artiste:
             print("Une exception s'est produite : ", error)
             print("Type d'exception : ", type(error))
 
-  def supprimer(self, conn, ID):
-    test_id=self.test_ID()
+
+
+  def supprimer(self, conn):
+    ID=str(input("Tapez l'ID de l'artiste"))
+    test_id= self.test_ID(conn,ID)
     if test_id==False:
-      print("Artiste non trouvé")
+       print("Artiste non trouvé")
 
     if test_id:
-       test_id_g=self.test_ID_g()
+       test_id_g=self.test_ID_g(conn,ID)
        if test_id_g:
           try:
             cur = conn.cursor()
@@ -274,8 +276,8 @@ class Artiste:
        except Exception as error:
             print("Une exception s'est produite : ", error)
             print("Type d'exception : ", type(error))
-
-
+            
+            
 
 class DroitsEdition:
    def ajouter(self, conn):
@@ -330,7 +332,7 @@ class DroitsEdition:
          ID=str(input("Entrez l'ID de la chanson :\n"))
          test=Chanson.test_ID(conn, ID)
 
-      nom_e=str(input("Tapez le nom d'un éditeur existant"))
+      nom_e=str(input("Tapez le nom d'un éditeur existant\n"))
       try:
          cur=conn.cursor()
          sql =" UPDATE DroitsEdition SET nom_e='%s' WHERE id_c='%s';"%(nom_e,ID)
@@ -347,7 +349,7 @@ class DroitsEdition:
          print("ID non trouvé \n")
          ID=str(input("Entrez l'ID de la chanson :\n"))
          test=Chanson.test_ID(conn, ID)
-      nom_e=str(input("Entrez le nom d'un éditeur existant"))
+      nom_e=str(input("Entrez le nom d'un éditeur existant\n"))
       try:
          cur=conn.cursor()
          sql =" DELETE FROM DroitsEdition WHERE nom_e='%s'AND id_c='%s';"%(nom_e,ID)
@@ -422,7 +424,7 @@ class DroitsArtistiques:
        ID=str(input("Entrez l'ID de la chanson :\n"))
        test=Chanson.test_ID(conn, ID)
     
-    id_a=str(input("Tapez le nom d'un artiste existant"))
+    id_a=str(input("Tapez l'ID d'un artiste existant"))
     typenum=int(input("Type : Tapez 1 pour 'auteur' ou 2 pour 'compositeur' ou 3 pour 'collaborateur'"))
     while typenum<1 or typenum>3:
              print("Erreur")
@@ -686,7 +688,7 @@ class Genre :
     def test_nom(conn, nom)-> bool:
         try:
              cur=conn.cursor()
-             sql="SELECT Id FROM genre WHERE nom ='%s';" % (nom)
+             sql="SELECT nom FROM genre WHERE nom ='%s';" % (nom)
              cur.execute(sql)
         except Exception as error:
            print("Une exception s'est produite : ", error)
@@ -775,7 +777,7 @@ class Preferences :
     def test_deux(conn, nom, genre)-> bool:
          try:
              cur=conn.cursor()
-             sql="SELECT * FROM preferences WHERE utilisateur ='%s' and genre ='%s" % (nom,genre)
+             sql="SELECT * FROM preferences WHERE utilisateur ='%s' and genre ='%s'" % (nom,genre)
              cur.execute(sql)
          except Exception as error:
             print("Une exception s'est produite : ", error)
@@ -809,7 +811,7 @@ class Preferences :
         self.utilisateur = str(input("Entrer l'identifiant de l'utilisateur : ")) 
         self.genre = str(input("Entrer le genre : "))
         
-        if self.test_de(conn,self.utilisateur) == False : 
+        if self.test_deux(conn,self.utilisateur,self.genre) == False : 
             print("La relation n'existe pas")
             return 
         try:
@@ -1009,10 +1011,10 @@ class Chanson:
 
     def insert(self,conn):
     
-        id = str(input("Id : "))
-        while self.test_ID(conn,id):
+        self.id = str(input("Id : "))
+        while self.test_ID(conn,self.id):
             print("ID non existant \n")
-            id = str(input("Id : "))
+            self.id = str(input("Id : "))
 
         self.titre = str(input("Titre : "))
         self.duree = str(input("Duree : "))
@@ -1022,7 +1024,7 @@ class Chanson:
 
         try:
             cur = conn.cursor()
-            sql = "INSERT INTO Chanson (Id, Titre, Durée, Pays, Album, Genre) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');"
+            sql = "INSERT INTO Chanson (Id, Titre, Durée, Pays, Album, Genre) VALUES (%s, %s, %s, %s, %s, %s);"
             cur.execute(sql, (self.id, self.titre, self.duree, self.pays, self.album, self.genre))
         except Exception as error:
            print("Une exception s'est produite : ", error)
@@ -1059,11 +1061,11 @@ class Chanson:
             print("ID non existant")
             id = str(input("Id : "))
         try:
-            sql = "DELETE FROM utilisateur WHERE nom_utilisateur = '%s' ;" %id
+            sql = "DELETE FROM chanson WHERE id = '%s' ;" %id
             
             cur = conn.cursor()
             cur.execute(sql)
-            print(f"Utilisateur '{id}' a été supprimé.")
+            print(f"chanson '{id}' a été supprimé.")
 
         except Exception as error:
            print("Une exception s'est produite : ", error)
@@ -1124,8 +1126,8 @@ class Album:
     def test_ID(conn, ID) -> bool:
         try:
            cur = conn.cursor()
-           sql = "SELECT Id FROM Artiste WHERE Id = %s;"
-           cur.execute(sql, (ID))
+           sql = "SELECT Id FROM album WHERE Id = '%s';"%ID
+           cur.execute(sql)
         
         except Exception as error:
            print("Une exception s'est produite : ", error)
@@ -1134,13 +1136,12 @@ class Album:
         return raw is not None
 
     def insert(self, conn):
-        self.id = input("Id : ")
+        self.id = str(input("Id : "))
         while self.test_ID(conn, self.id):
-            self.id = input("Id : ")
-
-        self.titre = input("Titre : ")
-        self.sortie = input("Sortie (YYYY-MM-DD) : ")
-        self.artiste = input("Artiste : ")
+            self.id = str(input("Id : "))
+        self.titre = str(input("Titre : "))
+        self.sortie = str(input("Sortie (YYYY-MM-DD) : "))
+        self.artiste = str(input("Artiste : "))
         
         try:
             cur = conn.cursor()
@@ -1155,13 +1156,14 @@ class Album:
            print("Type d'exception : ", type(error))
 
     def modifier(self, conn):
-        id = input("Id : ")
-        while not self.test_ID(conn, id):
-            id = input("Id : ")
+        self.id = str(input("Id : "))
+        while not self.test_ID(conn, self.id):
+            self.id = str(input("Id : "))
 
-        self.titre = input("Titre : ")
-        self.sortie = input("Sortie (YYYY-MM-DD) : ")
-        self.artiste = input("Artiste : ")
+        self.titre = str(input("Titre : "))
+        self.sortie = str(input("Sortie (YYYY-MM-DD) : "))
+        self.artiste = str(input("Artiste : "))
+
         try:
             sql = """
             UPDATE Album 
@@ -1169,7 +1171,7 @@ class Album:
             WHERE Id = %s;
             """
             cur = conn.cursor()
-            cur.execute(sql, (self.titre, self.sortie, self.artiste, id))
+            cur.execute(sql, (self.titre, self.sortie, self.artiste, self.id))
             conn.commit()
         except Exception as error:
            print("Une exception s'est produite : ", error)
@@ -1181,9 +1183,9 @@ class Album:
             id = input("Id : ")
         
         try:
-            sql = "DELETE FROM Album WHERE Id = %s;"
+            sql = "DELETE FROM Album WHERE Id = '%s';"%id
             cur = conn.cursor()
-            cur.execute(sql, (id))
+            cur.execute(sql)
             conn.commit()
             print(f"Album '{id}' a été supprimé.")
         except Exception as error:
@@ -1262,7 +1264,7 @@ class ContientAlbum:
             cur = conn.cursor()
             sql = """
             INSERT INTO ContientAlbum (album, playlist) 
-            VALUES ('%s', '%s');
+            VALUES (%s, %s);
             """
             cur.execute(sql, (self.album, self.playlist))
             conn.commit()
@@ -1596,7 +1598,7 @@ class Amis:
 #----------------------------------------------------------------------------------------------------#
 class Editeur:
     def inserer(conn):
-        nom=str(input("Tapez le nom de l'éditeur à ajouter"))
+        nom=str(input("Tapez le nom de l'éditeur à ajouter \n"))
         try:
             cursor = conn.cursor()
             insertion = "INSERT INTO Editeur VALUES ('%s')" % (nom)
@@ -1753,9 +1755,9 @@ while choix1>0 and choix1<6:
 
   elif choix1==4:
      f = """Insérer une donnée dans la table : \n1:Utilisateur\n2:Artiste\n3:Chanson\n
-4:Album\n5:Editeur\n6:Genre musical\n7:Historique\n
-8:Préférences\n9:Playlists\n10:Amis\n
-11:DroitsEdition\n12:DroitsArtistiques\n
+4:Album\n5:Editeur\n6:Genre musical\n
+7:Préférences\n8:Playlists\n9:Amis\n
+10:DroitsEdition\n11:DroitsArtistiques\n
 12:Album dans une playlist(ContientAlbum)\n13:Chanson dans une playlist(ContientChanson)"""
 
      print(f)
@@ -1781,27 +1783,24 @@ while choix1>0 and choix1<6:
          Genre.ajouter(Genre, conn)
 
      elif choixA==7:
-         Historique.inserer(conn) #à corriger
-
-     elif choixA==8:
         Preferences.ajouter(Preferences,conn)
 
-     elif choixA==9:
+     elif choixA==8:
         Playlist.ajouter(Playlist,conn)
 
-     elif choixA==10:
+     elif choixA==9:
         Amis.inserer(conn) 
 
-     elif choixA==11:
+     elif choixA==10:
         DroitsEdition.ajouter(DroitsEdition, conn)
 
-     elif choixA==12:
+     elif choixA==11:
         DroitsArtistiques.ajouter(DroitsArtistiques, conn)
 
-     elif choixA==13:
+     elif choixA==12:
         ContientAlbum.insert(ContientAlbum, conn)
 
-     elif choixA==14:
+     elif choixA==13:
         ContientChanson.inserer(ContientChanson, conn)
 
 
