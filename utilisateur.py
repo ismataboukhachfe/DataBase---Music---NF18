@@ -1,9 +1,9 @@
 import psycopg2
 
 HOST ="tuxa.sme.utc"
-USER = "nf18p032"
-PASSWORD = "Fb9EyCL7x6mZ"
-DATABASE = "dbnf18p032"
+USER = "nf18p029"
+PASSWORD = "1pDcKnoWN7G8"
+DATABASE = "dbnf18p029"
 
 try :
 	conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
@@ -25,7 +25,7 @@ class Utilisateur :
         self.typeu = typeu
         self.preferences = preferences  # Ajout de l'attribut preferences
         
-    def test_ID(conn, ID)-> bool:
+    def test_ID(self,conn, ID)-> bool:
       try:
           cur=conn.cursor()
           sql="SELECT id FROM Utilisateur WHERE id ='%s';" % (ID)
@@ -40,10 +40,14 @@ class Utilisateur :
         return False
 
     def modifier(self, conn):
+        cur = None
+
         try:
+            self.identifiant = str(input("Entrer l'identifiant : "))
+
             # Vérifier si l'identifiant existe déjà
-            while self.test_ID(conn, self.identifiant):
-                print("Impossible car l'identifiant existe déjà, veuillez essayer un autre identifiant")
+            while not self.test_ID(conn, self.identifiant):
+                print("Impossible car l'identifiant n'existe pas")
                 self.identifiant = str(input("Entrer l'identifiant : "))
 
             # Demander les informations à l'utilisateur
@@ -72,6 +76,15 @@ class Utilisateur :
             print("Une exception s'est produite : ", error)
             print("Type d'exception : ", type(error))
         finally:
-            cur.close()
+            if cur:
+                cur.close()
+
+
+def main() : 
+    utilisateur = Utilisateur()
+    utilisateur.modifier(conn)
+    
+    
+main()
 
 
